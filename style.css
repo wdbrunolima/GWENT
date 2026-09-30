@@ -496,6 +496,22 @@ button:disabled {
   min-width: 0;
 }
 
+.topbar-subtitle {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.topbar-brand {
+  margin: 3px 0 0;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: .12em;
+}
+
 .top-actions {
   display: flex;
   align-items: center;
@@ -866,8 +882,13 @@ body[data-faction]:not([data-faction=""]) .loss-screen {
     gap: 8px;
   }
 
-  .topbar h1 {
-    font-size: 16px;
+  .topbar-subtitle {
+    font-size: 10px;
+  }
+
+  .topbar-brand {
+    font-size: 20px;
+    letter-spacing: .1em;
   }
 
   .top-actions {
