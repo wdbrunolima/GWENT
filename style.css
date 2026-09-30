@@ -398,3 +398,11 @@ body[data-faction]:not([data-faction=""]) .loss-screen {
     transition: none;
   }
 }
+
+/* =========================================
+   CORREÇÃO — ELEMENTOS COM HIDDEN
+   ========================================= */
+
+[hidden] {
+  display: none !important;
+}
