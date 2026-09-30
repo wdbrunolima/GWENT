@@ -1,316 +1,1333 @@
-// Moral: +1 às OUTRAS unidades do campo, conforme a regra solicitada.
-// Ordem: clima → laço do grupo → moral → corneta/líder. Heróis são imunes.
+// Ordem: clima → laço forte → moral → corneta/líder.
+// Moral afeta somente as OUTRAS cartas da mesma fileira.
+// Heróis não recebem modificadores.
+
 const translations = {
   pt: {
-    appTitle: 'Assistente de pontuação', start: 'Começar jogo', coin: 'Moeda', score: 'PONTUAÇÃO',
-    addTitle: 'ADICIONAR CARTA', hint: 'Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.',
-    exit: 'sair', bond: 'Laço forte', bondPlus: 'Laço forte +1', morale: 'Moral', hero: 'Herói',
-    effects: 'Efeitos da carta', delete: 'Excluir carta', weather: 'Clima', none: 'Dia limpo',
-    frost: 'Geada', fog: 'Névoa', rain: 'Chuva', storm: 'Tempestade', leader: 'Líder', leaderTitle: 'Efeito do líder',
+    appTitle: 'Assistente de pontuação',
+    start: 'Começar jogo',
+    continueGame: 'Continuar jogo',
+    coin: 'Moeda',
+    score: 'PONTUAÇÃO',
+    addTitle: 'ADICIONAR CARTA',
+    hint: 'Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.',
+    exit: 'sair',
+    bond: 'Laço forte',
+    bondPlus: 'Laço forte +1',
+    morale: 'Moral',
+    hero: 'Herói',
+    effects: 'Efeitos da carta',
+    delete: 'Excluir carta',
+    weather: 'Clima',
+    none: 'Dia limpo',
+    frost: 'Geada',
+    fog: 'Névoa',
+    rain: 'Chuva',
+    storm: 'Tempestade',
+    leader: 'Líder',
+    leaderTitle: 'Efeito do líder',
     weatherNote: 'Apenas um clima por vez. Dia limpo remove o clima e restaura as cores.',
     leaderNote: 'Escolha a fileira que recebe ×2 do líder. Não acumula com a corneta e não afeta heróis. “Nenhum” remove o efeito.',
-    noLeader: 'Nenhum', double: 'Dobrar', rows: ['Corpo a Corpo', 'À Distância', 'Cerco'],
-    group: 'Grupo', card: 'carta', cards: 'cartas', empty: 'Nenhuma carta', base: 'base', horn: 'Corneta',
-    currentScore: 'Pontuação atual', bondNote: '“Laço forte +1” adiciona uma cópia abaixo desta carta, no mesmo grupo.',
-    effectNote: 'Ative Laço forte para criar um grupo. Moral dá +1 às outras cartas do campo, exceto heróis.',
-    resetQuestion: 'Reiniciar a partida? Todas as cartas e efeitos serão removidos.', reset: 'Reiniciar partida',
-    gameOver: 'FIM DE JOGO', lost: 'PERDEU', restart: 'Recomeçar', finishQuestion: 'Finalizar jogo?',
-    finishNote: 'Você ficou sem pedras de vida.', yes: 'Sim', no: 'Não', close: 'Fechar', life: 'Pedra de vida',
-    castle: 'Castelo', torch: 'Tocha', flip: 'Girar moeda', spinning: 'Girando…', flipAgain: 'Girar novamente',
-    coinHint: 'Castelo ou tocha? Gire a moeda.', languageName: 'Português'
+    noLeader: 'Nenhum',
+    double: 'Dobrar',
+    rows: ['Corpo a Corpo', 'À Distância', 'Cerco'],
+    group: 'Grupo',
+    card: 'carta',
+    cards: 'cartas',
+    empty: 'Nenhuma carta',
+    base: 'Base',
+    horn: 'Corneta',
+    currentScore: 'Pontuação atual',
+    bondNote: '“Laço forte +1” adiciona uma cópia abaixo desta carta, no mesmo grupo.',
+    effectNote: 'Moral dá +1 às outras cartas da mesma fileira, exceto heróis.',
+    heroNote: 'Herói: mantém o valor original.',
+    resetQuestion: 'Reiniciar a partida?',
+    resetNote: 'As cartas e os efeitos serão removidos. As duas pedras serão restauradas.',
+    reset: 'Reiniciar partida',
+    gameOver: 'FIM DE JOGO',
+    lost: 'PERDEU',
+    restart: 'Recomeçar',
+    finishQuestion: 'Finalizar jogo?',
+    finishNote: 'Você ficou sem pedras de vida.',
+    yes: 'Sim',
+    no: 'Não',
+    close: 'Fechar',
+    life: 'Pedra de vida',
+    castle: 'Castelo',
+    torch: 'Tocha',
+    flip: 'Girar moeda',
+    spinning: 'Girando…',
+    flipAgain: 'Girar novamente',
+    coinHint: 'Castelo ou tocha? Gire a moeda.',
+    languageName: 'Português',
+    chooseDeck: 'Escolha seu baralho',
+    deckHint: 'Selecione uma facção para começar.',
+    begin: 'Começar',
+    back: 'Voltar',
+    monsters: 'Monstros',
+    northern: 'Reinos do Norte',
+    scoiatael: "Scoia’tael",
+    nilfgaard: 'Nilfgaard',
+    skellige: 'Skellige',
+    round: 'Rodada',
+    nextRound: 'Próxima rodada',
+    nextQuestion: 'Avançar para a próxima rodada?',
+    nextNote: 'As cartas, o clima, a corneta e o efeito do líder serão limpos. As pedras restantes serão mantidas.',
+    roundReady: 'Prepare suas cartas',
+    lastRound: 'Última rodada. Reinicie para começar outra partida.',
+    replaceQuestion: 'Começar uma nova partida?',
+    replaceNote: 'A partida salva será substituída.',
+    saveUnavailable: 'O navegador não permitiu salvar a partida. Mantenha esta aba aberta.',
+    total: 'Total'
   },
+
   en: {
-    appTitle: 'Score assistant', start: 'Start game', coin: 'Coin toss', score: 'SCORE',
-    addTitle: 'ADD CARD', hint: 'Choose a row and tap a value. Tap a card to configure its effects.',
-    exit: 'exit', bond: 'Tight Bond', bondPlus: 'Tight Bond +1', morale: 'Morale', hero: 'Hero',
-    effects: 'Card effects', delete: 'Delete card', weather: 'Weather', none: 'Clear Weather',
-    frost: 'Frost', fog: 'Fog', rain: 'Rain', storm: 'Storm', leader: 'Leader', leaderTitle: 'Leader effect',
+    appTitle: 'Score assistant',
+    start: 'Start game',
+    continueGame: 'Continue game',
+    coin: 'Coin toss',
+    score: 'SCORE',
+    addTitle: 'ADD CARD',
+    hint: 'Choose a row and tap a value. Tap a card to configure its effects.',
+    exit: 'exit',
+    bond: 'Tight Bond',
+    bondPlus: 'Tight Bond +1',
+    morale: 'Morale',
+    hero: 'Hero',
+    effects: 'Card effects',
+    delete: 'Delete card',
+    weather: 'Weather',
+    none: 'Clear Weather',
+    frost: 'Frost',
+    fog: 'Fog',
+    rain: 'Rain',
+    storm: 'Storm',
+    leader: 'Leader',
+    leaderTitle: 'Leader effect',
     weatherNote: 'Only one weather card at a time. Clear Weather removes weather and restores row colors.',
     leaderNote: 'Choose the row that gets ×2 from the leader. Does not stack with a horn or affect heroes. “None” removes the effect.',
-    noLeader: 'None', double: 'Double', rows: ['Close Combat', 'Ranged', 'Siege'],
-    group: 'Group', card: 'card', cards: 'cards', empty: 'No cards', base: 'base', horn: 'Horn',
-    currentScore: 'Current score', bondNote: '“Tight Bond +1” adds a copy below this card in the same group.',
-    effectNote: 'Enable Tight Bond to create a group. Morale gives +1 to the other cards on the board, except heroes.',
-    resetQuestion: 'Restart the game? All cards and effects will be removed.', reset: 'Restart game',
-    gameOver: 'GAME OVER', lost: 'YOU LOST', restart: 'Play again', finishQuestion: 'End game?',
-    finishNote: 'You have no life gems left.', yes: 'Yes', no: 'No', close: 'Close', life: 'Life gem',
-    castle: 'Castle', torch: 'Torch', flip: 'Flip coin', spinning: 'Spinning…', flipAgain: 'Flip again',
-    coinHint: 'Castle or torch? Flip the coin.', languageName: 'English'
+    noLeader: 'None',
+    double: 'Double',
+    rows: ['Close Combat', 'Ranged', 'Siege'],
+    group: 'Group',
+    card: 'card',
+    cards: 'cards',
+    empty: 'No cards',
+    base: 'Base',
+    horn: 'Horn',
+    currentScore: 'Current score',
+    bondNote: '“Tight Bond +1” adds a copy below this card in the same group.',
+    effectNote: 'Morale gives +1 to the other cards in the same row, except heroes.',
+    heroNote: 'Hero: keeps its original value.',
+    resetQuestion: 'Restart the game?',
+    resetNote: 'All cards and effects will be removed. Both life gems will be restored.',
+    reset: 'Restart game',
+    gameOver: 'GAME OVER',
+    lost: 'YOU LOST',
+    restart: 'Play again',
+    finishQuestion: 'End game?',
+    finishNote: 'You have no life gems left.',
+    yes: 'Yes',
+    no: 'No',
+    close: 'Close',
+    life: 'Life gem',
+    castle: 'Castle',
+    torch: 'Torch',
+    flip: 'Flip coin',
+    spinning: 'Spinning…',
+    flipAgain: 'Flip again',
+    coinHint: 'Castle or torch? Flip the coin.',
+    languageName: 'English',
+    chooseDeck: 'Choose your deck',
+    deckHint: 'Select a faction to begin.',
+    begin: 'Begin',
+    back: 'Back',
+    monsters: 'Monsters',
+    northern: 'Northern Realms',
+    scoiatael: "Scoia’tael",
+    nilfgaard: 'Nilfgaard',
+    skellige: 'Skellige',
+    round: 'Round',
+    nextRound: 'Next round',
+    nextQuestion: 'Advance to the next round?',
+    nextNote: 'Cards, weather, horns and the leader effect will be cleared. Your remaining life gems will be kept.',
+    roundReady: 'Prepare your cards',
+    lastRound: 'Final round. Restart to begin another game.',
+    replaceQuestion: 'Start a new game?',
+    replaceNote: 'Your saved game will be replaced.',
+    saveUnavailable: 'Your browser could not save the game. Keep this tab open.',
+    total: 'Total'
   }
 };
-let language = 'pt';
-try { const saved = localStorage.getItem('gwent-language'); if (saved === 'en' || saved === 'pt') language = saved; } catch {}
-const t = key => translations[language][key];
+
+const DECKS = [
+  'monsters',
+  'northern',
+  'scoiatael',
+  'nilfgaard',
+  'skellige'
+];
 
 const climates = {
   frost: { icon: '❄️', rows: [0] },
   fog: { icon: '🌫️', rows: [1] },
   rain: { icon: '🌧️', rows: [2] },
-  storm: { icon: '⛈️', rows: [0, 1] }
+  storm: { icon: '⛈️', rows: [1, 2] }
 };
-function initialState() {
-  return { selectedRow: 0, nextId: 1, nextGroup: 1, cards: [],
-    rows: [{ horn: false }, { horn: false }, { horn: false }],
-    weather: [], leaderRow: null, gems: [true, true], selectedCardId: null };
-}
-let state = initialState();
-const board = document.getElementById('board');
+
+const SAVE_KEY = 'gwent-game-v3';
+const LANGUAGE_KEY = 'gwent-language';
+
+const $ = id => document.getElementById(id);
 const has = (card, effect) => card.effects.includes(effect);
-const weatherFor = row => state.weather.filter(w => climates[w].rows.includes(row));
-function cardScore(card) {
-  if (has(card, 'hero')) return card.value;
-  let value = weatherFor(card.row).length ? 1 : card.value;
-  if (has(card, 'bond') && card.groupId !== null) {
-    value *= state.cards.filter(c => c.row === card.row && c.groupId === card.groupId && has(c, 'bond') && !has(c, 'hero')).length;
-  }
-  value += state.cards.filter(c => c.id !== card.id && has(c, 'morale') && !has(c, 'hero')).length;
-  if (state.rows[card.row].horn || state.leaderRow === card.row) value *= 2;
-  return value;
-}
-function calculateRow(row) {
-  return state.cards.filter(c => c.row === row).reduce((sum, c) => sum + cardScore(c), 0);
-}
-function setEffect(card, effect) {
-  if (has(card, effect)) {
-    card.effects = card.effects.filter(e => e !== effect);
-    if (effect === 'bond') card.groupId = null;
-  } else if (effect === 'hero') {
-    card.effects = ['hero'];
-    card.groupId = null;
-  } else {
-    card.effects = card.effects.filter(e => e !== 'hero');
-    card.effects.push(effect);
-    if (effect === 'bond') card.groupId = state.nextGroup++;
-  }
-}
-function addBondCopy(card) {
-  if (!has(card, 'bond') || has(card, 'hero')) return;
-  const copy = { id: state.nextId++, row: card.row, value: card.value,
-    effects: [...card.effects], groupId: card.groupId };
-  state.cards.splice(state.cards.indexOf(card) + 1, 0, copy);
-  return copy;
-}
-function cardMarkup(card) {
-  return `<button class="card ${has(card, 'hero') ? 'hero-card' : ''}" data-card="${card.id}" aria-label="${t('card')} ${card.value}, ${t('currentScore')} ${cardScore(card)}. ${t('effects')}">
-    <span class="card-numbers"><span class="card-value">${cardScore(card)}</span><small>${t('base')} ${card.value}</small></span>
-    <span class="card-icons">${has(card, 'bond') ? '🔗 +'  : ''}${has(card, 'morale') ? '❤️' : ''}${has(card, 'hero') ? '👑' : ''}</span>
-  </button>`;
-}
-function render() {
-  board.innerHTML = '';
-  t('rows').forEach((name, rowIndex) => {
-    const row = document.createElement('section');
-    const weather = weatherFor(rowIndex);
-    row.className = `row ${weather.length ? 'weather-affected weather-' + weather[weather.length - 1] : ''} ${state.selectedRow === rowIndex ? 'selected-row' : ''}`;
-    const cards = state.cards.filter(c => c.row === rowIndex);
-    const seen = new Set();
-    const markup = cards.map(card => {
-      if (!has(card, 'bond')) return cardMarkup(card);
-      if (seen.has(card.groupId)) return '';
-      seen.add(card.groupId);
-      return `<div class="bond-group"><span class="group-label">🔗 + ${t('group')}</span>${cards.filter(c => c.groupId === card.groupId && has(c, 'bond')).map(cardMarkup).join('')}</div>`;
-    }).join('');
-    row.innerHTML = `<div class="row-head"><div class="row-name">${name}</div>
-      <div class="row-score">${calculateRow(rowIndex)}</div>
-      <div class="row-controls"><button class="row-control ${state.selectedRow === rowIndex ? 'active' : ''}" data-select-row="${rowIndex}" aria-pressed="${state.selectedRow === rowIndex}">+ ${t('card')}</button>
-      <button class="row-control ${state.rows[rowIndex].horn ? 'active' : ''}" data-horn="${rowIndex}" aria-pressed="${state.rows[rowIndex].horn}" aria-label="${t('horn')} · ${name}">🎺 ×2</button></div>
-      ${weather.length ? `<div class="row-status">${weather.map(w => climates[w].icon + ' ' + t(w)).join(' · ')}</div>` : ''}
-      ${state.leaderRow === rowIndex ? `<div class="leader-status">👑 ${t('leader')} ×2</div>` : ''}</div>
-      <div class="cards">${markup || `<div class="empty">${t('empty')}</div>`}</div>
-      <div class="row-total">${cards.length} ${t(cards.length === 1 ? 'card' : 'cards')}</div>`;
-    board.appendChild(row);
-  });
-  document.getElementById('totalScore').textContent = [0, 1, 2].reduce((sum, r) => sum + calculateRow(r), 0);
-  document.getElementById('weatherBtn').classList.toggle('active', state.weather.length > 0);
-  document.getElementById('leaderBtn').classList.toggle('active', state.leaderRow !== null);
-  document.querySelectorAll('[data-weather]').forEach(b => {
-    const active = b.dataset.weather === 'none' ? !state.weather.length : state.weather.includes(b.dataset.weather);
-    b.classList.toggle('active', active); b.setAttribute('aria-pressed', active);
-  });
-  document.querySelectorAll('[data-leader]').forEach(b => {
-    const active = b.dataset.leader === 'none' ? state.leaderRow === null : state.leaderRow === Number(b.dataset.leader);
-    b.classList.toggle('active', active); b.setAttribute('aria-pressed', active);
-  });
-  document.querySelectorAll('.gem').forEach(b => {
-    b.classList.toggle('active', state.gems[Number(b.dataset.gem)]);
-    b.setAttribute('aria-pressed', state.gems[Number(b.dataset.gem)]);
-  });
-}
-let lastFocus = null;
+
+let language = 'pt';
+let storageAvailable = true;
+let currentScreen = 'menu';
+let selectedDeck = null;
+let selectedCardId = null;
 let pendingGem = null;
-function showModal(id) {
-  closeAllModals();
-  lastFocus = document.activeElement;
-  const modal = document.getElementById(id);
-  modal.classList.remove('hidden');
-  modal.querySelector('button').focus();
-}
-function closeAllModals() {
-  if (pendingGem !== null) {
-    state.gems[pendingGem] = true; pendingGem = null; render();
-  }
-  stopCoin();
-  document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
-  if (lastFocus?.isConnected) lastFocus.focus();
-}
-function updateCardModal() {
-  const card = state.cards.find(c => c.id === state.selectedCardId);
-  if (!card) return;
-  document.getElementById('modalNumber').textContent = card.value;
-  document.querySelectorAll('[data-effect]').forEach(b => {
-    b.classList.toggle('active', has(card, b.dataset.effect));
-    b.setAttribute('aria-pressed', has(card, b.dataset.effect));
-  });
-  document.getElementById('bondPlus').hidden = !has(card, 'bond');
-  document.getElementById('cardNote').textContent = `${t('currentScore')}: ${cardScore(card)}. ` + t(has(card, 'bond') ? 'bondNote' : 'effectNote');
-}
-function openCardModal(id) {
-  state.selectedCardId = id;
-  updateCardModal(); showModal('cardModal');
-}
-board.addEventListener('click', event => {
-  const b = event.target.closest('button');
-  if (!b) return;
-  if (b.hasAttribute('data-select-row')) { state.selectedRow = Number(b.dataset.selectRow); render(); }
-  if (b.hasAttribute('data-horn')) { const r = Number(b.dataset.horn); state.rows[r].horn = !state.rows[r].horn; render(); }
-  if (b.hasAttribute('data-card')) openCardModal(Number(b.dataset.card));
-});
-document.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
-  state.cards.push({ id: state.nextId++, row: state.selectedRow, value: Number(b.dataset.add), effects: [], groupId: null }); render();
-}));
-document.querySelectorAll('[data-effect]').forEach(b => b.addEventListener('click', () => {
-  const card = state.cards.find(c => c.id === state.selectedCardId);
-  if (!card) return;
-  setEffect(card, b.dataset.effect); render(); updateCardModal();
-}));
-document.getElementById('bondPlus').addEventListener('click', () => {
-  const card = state.cards.find(c => c.id === state.selectedCardId);
-  if (!card) return;
-  addBondCopy(card); closeAllModals(); render();
-});
-document.getElementById('deleteCard').addEventListener('click', () => {
-  state.cards = state.cards.filter(c => c.id !== state.selectedCardId);
-  state.selectedCardId = null; closeAllModals(); render();
-});
-document.querySelectorAll('[data-weather]').forEach(b => b.addEventListener('click', () => {
-  const w = b.dataset.weather;
-  state.weather = w === 'none' || state.weather.includes(w) ? [] : [w];
-  render(); closeAllModals();
-}));
-document.querySelectorAll('[data-leader]').forEach(b => b.addEventListener('click', () => {
-  state.leaderRow = b.dataset.leader === 'none' ? null : Number(b.dataset.leader);
-  render(); closeAllModals();
-}));
-document.querySelectorAll('.gem').forEach(b => b.addEventListener('click', () => {
-  const i = Number(b.dataset.gem);
-  state.gems[i] = !state.gems[i]; render();
-  if (state.gems.every(g => !g)) {
-    showModal('finishModal'); pendingGem = i;
-  }
-}));
-document.getElementById('weatherBtn').addEventListener('click', () => showModal('weatherModal'));
-document.getElementById('leaderBtn').addEventListener('click', () => showModal('leaderModal'));
-document.querySelectorAll('.close').forEach(b => b.addEventListener('click', closeAllModals));
-document.querySelectorAll('.modal').forEach(m => {
-  m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
-  m.setAttribute('aria-label', m.querySelector('.modal-title').textContent);
-  m.addEventListener('click', e => { if (e.target === m) closeAllModals(); });
-});
-document.addEventListener('keydown', e => {
-  const modal = document.querySelector('.modal:not(.hidden)');
-  if (!modal) return;
-  if (e.key === 'Escape') closeAllModals();
-  if (e.key === 'Tab') {
-    const buttons = [...modal.querySelectorAll('button')].filter(b => !b.hidden && !b.disabled);
-    const first = buttons[0], last = buttons[buttons.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  }
-});
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm(t('resetQuestion'))) return;
-  state = initialState(); closeAllModals(); render();
-});
+let confirmationAction = null;
+let lastFocus = null;
+let roundBusy = false;
 
 let coinTimer = null;
 let coinBusy = false;
 let coinAngle = 0;
 let coinOutcome = null;
-function renderCoinText() {
-  document.getElementById('coinResult').textContent = coinBusy ? t('spinning') : coinOutcome ? t(coinOutcome) : t('coinHint');
-  document.getElementById('flipBtn').textContent = t(coinBusy ? 'spinning' : coinOutcome ? 'flipAgain' : 'flip');
-  document.getElementById('flipBtn').disabled = coinBusy;
+
+try {
+  const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
+  if (savedLanguage === 'pt' || savedLanguage === 'en') {
+    language = savedLanguage;
+  }
+} catch {
+  storageAvailable = false;
 }
-function stopCoin() {
-  clearTimeout(coinTimer); coinTimer = null;
-  if (coinBusy) {
-    coinBusy = false; coinOutcome = null; coinAngle = 0;
-    const disc = document.getElementById('coinDisc');
-    disc.style.transition = 'none'; disc.style.transform = 'rotateY(0deg)';
-    renderCoinText();
+
+const t = key => translations[language][key];
+
+function initialState(deck = 'monsters') {
+  return {
+    active: false,
+    deck,
+    round: 1,
+    selectedRow: 0,
+    nextId: 1,
+    nextGroup: 1,
+    cards: [],
+    rows: [{ horn: false }, { horn: false }, { horn: false }],
+    weather: [],
+    leaderRow: null,
+    gems: [true, true]
+  };
+}
+
+// Valida o conteúdo salvo antes de reconstruir a partida.
+function readSavedGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+
+    const saved = JSON.parse(raw);
+    const value = saved?.state;
+
+    if (
+      saved.version !== 3 ||
+      !value ||
+      value.active !== true ||
+      !DECKS.includes(value.deck) ||
+      !Number.isInteger(value.round) ||
+      value.round < 1 ||
+      value.round > 3 ||
+      !Number.isInteger(value.selectedRow) ||
+      value.selectedRow < 0 ||
+      value.selectedRow > 2 ||
+      !Array.isArray(value.cards) ||
+      !Array.isArray(value.rows) ||
+      value.rows.length !== 3 ||
+      !value.rows.every(row => typeof row?.horn === 'boolean') ||
+      !Array.isArray(value.gems) ||
+      value.gems.length !== 2 ||
+      !value.gems.every(gem => typeof gem === 'boolean') ||
+      !value.gems.some(Boolean) ||
+      !Array.isArray(value.weather) ||
+      value.weather.length > 1 ||
+      !value.weather.every(weather =>
+        Object.prototype.hasOwnProperty.call(climates, weather)
+      ) ||
+      ![null, 0, 1, 2].includes(value.leaderRow)
+    ) {
+      return null;
+    }
+
+    const ids = new Set();
+    const cards = [];
+
+    for (const card of value.cards) {
+      if (
+        !Number.isSafeInteger(card.id) ||
+        card.id < 1 ||
+        ids.has(card.id) ||
+        !Number.isInteger(card.row) ||
+        card.row < 0 ||
+        card.row > 2 ||
+        !Number.isInteger(card.value) ||
+        card.value < 1 ||
+        card.value > 15 ||
+        !Array.isArray(card.effects) ||
+        !card.effects.every(effect =>
+          ['bond', 'morale', 'hero'].includes(effect)
+        )
+      ) {
+        return null;
+      }
+
+      ids.add(card.id);
+
+      const effects = card.effects.includes('hero')
+        ? ['hero']
+        : [...new Set(card.effects)];
+
+      if (
+        effects.includes('bond') &&
+        (!Number.isSafeInteger(card.groupId) || card.groupId < 1)
+      ) {
+        return null;
+      }
+
+      cards.push({
+        id: card.id,
+        row: card.row,
+        value: card.value,
+        effects,
+        groupId: effects.includes('bond') ? card.groupId : null
+      });
+    }
+
+    const restored = initialState(value.deck);
+
+    restored.active = true;
+    restored.round = value.round;
+    restored.selectedRow = value.selectedRow;
+    restored.cards = cards;
+    restored.rows = value.rows.map(row => ({ horn: row.horn }));
+    restored.weather = [...value.weather];
+    restored.leaderRow = value.leaderRow;
+    restored.gems = [...value.gems];
+
+    restored.nextId = cards.reduce(
+      (next, card) => Math.max(next, card.id + 1),
+      1
+    );
+
+    restored.nextGroup = cards.reduce(
+      (next, card) => Math.max(next, (card.groupId || 0) + 1),
+      1
+    );
+
+    return restored;
+  } catch {
+    return null;
   }
 }
+
+let state = readSavedGame() || initialState();
+
+// Acrescenta os novos controles sem precisar alterar seu HTML.
+$('startBtn').insertAdjacentHTML('beforebegin', `
+  <button
+    class="menu-button primary"
+    id="continueBtn"
+    data-i18n="continueGame"
+    hidden
+  ></button>
+`);
+
+$('languageLabel').insertAdjacentHTML('afterend', `
+  <p
+    class="save-notice"
+    id="saveNotice"
+    data-i18n="saveUnavailable"
+    role="status"
+    hidden
+  ></p>
+`);
+
+$('menuScreen').insertAdjacentHTML('afterend', `
+  <section class="deck-screen" id="deckScreen" hidden>
+    <div class="deck-panel">
+      <div class="eyebrow">GWENT</div>
+      <h1 data-i18n="chooseDeck"></h1>
+      <p class="menu-subtitle" data-i18n="deckHint"></p>
+
+      <div class="deck-options">
+        ${DECKS.map(deck => `
+          <button
+            class="deck-button"
+            data-deck="${deck}"
+            aria-pressed="false"
+          >
+            <span class="deck-dot" aria-hidden="true"></span>
+            <span data-i18n="${deck}"></span>
+            <span class="deck-check" aria-hidden="true">✓</span>
+          </button>
+        `).join('')}
+      </div>
+
+      <button
+        class="menu-button primary"
+        id="beginBtn"
+        data-i18n="begin"
+        disabled
+      ></button>
+
+      <button
+        class="exit-button"
+        id="backMenuBtn"
+        data-i18n="back"
+      ></button>
+    </div>
+  </section>
+`);
+
+const topActions = document.createElement('div');
+topActions.className = 'top-actions';
+
+$('resetBtn').before(topActions);
+
+topActions.innerHTML = `
+  <button
+    class="reset-btn next-round-btn"
+    id="nextRoundBtn"
+    aria-label="Próxima rodada"
+  >→</button>
+`;
+
+topActions.appendChild($('resetBtn'));
+
+$('gameScreen').querySelector('.topbar').insertAdjacentHTML(
+  'afterend',
+  '<div class="match-caption" id="matchCaption"></div>'
+);
+
+$('cardNote').insertAdjacentHTML('beforebegin', `
+  <p
+    class="card-calculation"
+    id="cardCalculation"
+    aria-live="polite"
+  ></p>
+`);
+
+document.body.insertAdjacentHTML('beforeend', `
+  <div class="modal hidden" id="confirmModal">
+    <div class="modal-card">
+      <button class="close" type="button">×</button>
+      <div class="modal-title" id="confirmTitle"></div>
+      <p class="modal-note" id="confirmText"></p>
+      <div class="confirm-actions">
+        <button
+          class="menu-button"
+          id="cancelAction"
+          data-i18n="no"
+        ></button>
+        <button
+          class="menu-button primary"
+          id="confirmAction"
+          data-i18n="yes"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="round-transition"
+    id="roundTransition"
+    role="status"
+    aria-live="polite"
+    hidden
+  >
+    <div class="round-banner">
+      <div class="round-emblem" aria-hidden="true">⚔</div>
+      <div class="eyebrow" data-i18n="round"></div>
+      <strong id="transitionNumber">2</strong>
+      <span data-i18n="roundReady"></span>
+    </div>
+  </div>
+`);
+
+const screenIds = [
+  'menuScreen',
+  'deckScreen',
+  'gameScreen',
+  'lossScreen'
+];
+
+const board = $('board');
+
+function updateSaveNotice() {
+  $('saveNotice').hidden = storageAvailable;
+}
+
+function saveGame() {
+  try {
+    if (!state.active) {
+      localStorage.removeItem(SAVE_KEY);
+    } else {
+      const snapshot = JSON.parse(JSON.stringify(state));
+
+      // Uma derrota ainda não confirmada não fica gravada.
+      if (pendingGem !== null) {
+        snapshot.gems[pendingGem] = true;
+      }
+
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        version: 3,
+        state: snapshot
+      }));
+    }
+
+    storageAvailable = true;
+  } catch {
+    storageAvailable = false;
+  }
+
+  updateSaveNotice();
+}
+
+function weatherFor(row) {
+  return state.weather.filter(weather =>
+    climates[weather].rows.includes(row)
+  );
+}
+
+// O placar e a explicação usam exatamente o mesmo cálculo.
+function scoreDetails(card) {
+  let value = card.value;
+  const steps = [`${t('base')} ${value}`];
+
+  if (has(card, 'hero')) {
+    steps.push(t('heroNote'));
+    return { value, steps };
+  }
+
+  if (weatherFor(card.row).length) {
+    value = 1;
+    steps.push(`${t('weather')} → ${value}`);
+  }
+
+  if (has(card, 'bond') && card.groupId !== null) {
+    const count = state.cards.filter(other =>
+      other.row === card.row &&
+      other.groupId === card.groupId &&
+      has(other, 'bond') &&
+      !has(other, 'hero')
+    ).length;
+
+    value *= Math.max(1, count);
+    steps.push(`${t('bond')} ×${Math.max(1, count)} = ${value}`);
+  }
+
+  const morale = state.cards.filter(other =>
+    other.row === card.row &&
+    other.id !== card.id &&
+    has(other, 'morale') &&
+    !has(other, 'hero')
+  ).length;
+
+  if (morale > 0) {
+    value += morale;
+    steps.push(`${t('morale')} +${morale} = ${value}`);
+  }
+
+  if (state.rows[card.row].horn || state.leaderRow === card.row) {
+    value *= 2;
+
+    const source = state.rows[card.row].horn
+      ? t('horn')
+      : t('leader');
+
+    steps.push(`${source} ×2 = ${value}`);
+  }
+
+  return { value, steps };
+}
+
+function cardScore(card) {
+  return scoreDetails(card).value;
+}
+
+function calculateRow(row) {
+  return state.cards
+    .filter(card => card.row === row)
+    .reduce((sum, card) => sum + cardScore(card), 0);
+}
+
+function setEffect(card, effect) {
+  if (has(card, effect)) {
+    card.effects = card.effects.filter(item => item !== effect);
+    if (effect === 'bond') card.groupId = null;
+    return;
+  }
+
+  if (effect === 'hero') {
+    card.effects = ['hero'];
+    card.groupId = null;
+    return;
+  }
+
+  card.effects = card.effects.filter(item => item !== 'hero');
+  card.effects.push(effect);
+
+  if (effect === 'bond') {
+    card.groupId = state.nextGroup++;
+  }
+}
+
+function addBondCopy(card) {
+  if (!has(card, 'bond') || has(card, 'hero')) return;
+
+  state.cards.splice(state.cards.indexOf(card) + 1, 0, {
+    id: state.nextId++,
+    row: card.row,
+    value: card.value,
+    effects: [...card.effects],
+    groupId: card.groupId
+  });
+}
+
+function cardMarkup(card) {
+  return `
+    <button
+      class="card ${has(card, 'hero') ? 'hero-card' : ''}"
+      data-card="${card.id}"
+      aria-label="${t('card')} ${card.value}. ${t('currentScore')}: ${cardScore(card)}"
+    >
+      <span class="card-numbers">
+        <span class="card-value">${cardScore(card)}</span>
+        <small>${t('base')} ${card.value}</small>
+      </span>
+
+      <span class="card-icons">
+        ${has(card, 'bond') ? '🔗 +' : ''}
+        ${has(card, 'morale') ? '❤️' : ''}
+        ${has(card, 'hero') ? '👑' : ''}
+      </span>
+    </button>
+  `;
+}
+
+function render() {
+  board.innerHTML = '';
+
+  t('rows').forEach((name, rowIndex) => {
+    const row = document.createElement('section');
+    const weather = weatherFor(rowIndex);
+    const cards = state.cards.filter(card => card.row === rowIndex);
+    const seen = new Set();
+
+    row.className = [
+      'row',
+      state.selectedRow === rowIndex ? 'selected-row' : '',
+      weather.length
+        ? `weather-affected weather-${weather[weather.length - 1]}`
+        : ''
+    ].filter(Boolean).join(' ');
+
+    const markup = cards.map(card => {
+      if (!has(card, 'bond')) return cardMarkup(card);
+      if (seen.has(card.groupId)) return '';
+
+      seen.add(card.groupId);
+
+      const group = cards.filter(other =>
+        other.groupId === card.groupId && has(other, 'bond')
+      );
+
+      return `
+        <div class="bond-group">
+          <span class="group-label">🔗 + ${t('group')}</span>
+          ${group.map(cardMarkup).join('')}
+        </div>
+      `;
+    }).join('');
+
+    row.innerHTML = `
+      <div class="row-head">
+        <div class="row-name">${name}</div>
+        <div class="row-score">${calculateRow(rowIndex)}</div>
+
+        <div class="row-controls">
+          <button
+            class="row-control ${state.selectedRow === rowIndex ? 'active' : ''}"
+            data-select-row="${rowIndex}"
+            aria-pressed="${state.selectedRow === rowIndex}"
+          >+ ${t('card')}</button>
+
+          <button
+            class="row-control ${state.rows[rowIndex].horn ? 'active' : ''}"
+            data-horn="${rowIndex}"
+            aria-pressed="${state.rows[rowIndex].horn}"
+            aria-label="${t('horn')} · ${name}"
+          >🎺 ×2</button>
+        </div>
+
+        ${weather.length ? `
+          <div class="row-status">
+            ${weather.map(w => `${climates[w].icon} ${t(w)}`).join(' · ')}
+          </div>
+        ` : ''}
+
+        ${state.leaderRow === rowIndex ? `
+          <div class="leader-status">👑 ${t('leader')} ×2</div>
+        ` : ''}
+      </div>
+
+      <div class="cards">
+        ${markup || `<div class="empty">${t('empty')}</div>`}
+      </div>
+
+      <div class="row-total">
+        ${cards.length} ${t(cards.length === 1 ? 'card' : 'cards')}
+      </div>
+    `;
+
+    board.appendChild(row);
+  });
+
+  $('totalScore').textContent =
+    [0, 1, 2].reduce((sum, row) => sum + calculateRow(row), 0);
+
+  $('weatherBtn').classList.toggle('active', state.weather.length > 0);
+  $('leaderBtn').classList.toggle('active', state.leaderRow !== null);
+
+  document.querySelectorAll('[data-weather]').forEach(button => {
+    const active = button.dataset.weather === 'none'
+      ? state.weather.length === 0
+      : state.weather.includes(button.dataset.weather);
+
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
+  });
+
+  document.querySelectorAll('[data-leader]').forEach(button => {
+    const active = button.dataset.leader === 'none'
+      ? state.leaderRow === null
+      : state.leaderRow === Number(button.dataset.leader);
+
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
+  });
+
+  document.querySelectorAll('.gem').forEach(button => {
+    const active = state.gems[Number(button.dataset.gem)];
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
+  });
+
+  $('matchCaption').textContent =
+    `${t(state.deck)} · ${t('round')} ${state.round}/3`;
+
+  $('nextRoundBtn').disabled = state.round >= 3 || roundBusy;
+  $('nextRoundBtn').title = t(
+    state.round >= 3 ? 'lastRound' : 'nextRound'
+  );
+
+  $('continueBtn').hidden = !state.active;
+
+  saveGame();
+}
+
+function applyTheme() {
+  document.body.dataset.faction =
+    currentScreen === 'game' || currentScreen === 'loss'
+      ? state.deck
+      : '';
+}
+
+function closeAllModals() {
+  if (pendingGem !== null) {
+    state.gems[pendingGem] = true;
+    pendingGem = null;
+    render();
+  }
+
+  confirmationAction = null;
+  stopCoin();
+
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.classList.add('hidden');
+  });
+
+  screenIds.forEach(id => {
+    $(id).inert = false;
+  });
+
+  document.body.classList.remove('modal-open');
+
+  if (lastFocus?.isConnected && lastFocus.getClientRects().length) {
+    lastFocus.focus();
+  }
+
+  lastFocus = null;
+}
+
+function showModal(id) {
+  closeAllModals();
+  lastFocus = document.activeElement;
+
+  screenIds.forEach(screenId => {
+    $(screenId).inert = true;
+  });
+
+  const modal = $(id);
+  modal.classList.remove('hidden');
+
+  document.body.classList.add('modal-open');
+  modal.querySelector('button')?.focus();
+}
+
+function askConfirmation(title, note, action) {
+  $('confirmTitle').textContent = title;
+  $('confirmText').textContent = note;
+  $('confirmModal').setAttribute('aria-label', title);
+
+  showModal('confirmModal');
+  confirmationAction = action;
+}
+
+function updateCardModal() {
+  const card = state.cards.find(item => item.id === selectedCardId);
+  if (!card) return;
+
+  $('modalNumber').textContent = card.value;
+
+  document.querySelectorAll('[data-effect]').forEach(button => {
+    const active = has(card, button.dataset.effect);
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
+  });
+
+  $('bondPlus').hidden = !has(card, 'bond');
+
+  const details = scoreDetails(card);
+
+  $('cardCalculation').textContent =
+    details.steps.join(' → ') + ` · ${t('total')}: ${details.value}`;
+
+  $('cardNote').textContent = has(card, 'hero')
+    ? t('heroNote')
+    : t(has(card, 'bond') ? 'bondNote' : 'effectNote');
+}
+
+function openCardModal(id) {
+  selectedCardId = id;
+  updateCardModal();
+  showModal('cardModal');
+}
+
 function setScreen(screen) {
   closeAllModals();
-  document.getElementById('menuScreen').hidden = screen !== 'menu';
-  document.getElementById('gameScreen').hidden = screen !== 'game';
-  document.getElementById('lossScreen').hidden = screen !== 'loss';
-  const focusId = screen === 'menu' ? 'startBtn' : screen === 'loss' ? 'restartBtn' : 'resetBtn';
-  document.getElementById(focusId).focus();
+  currentScreen = screen;
+
+  const visibleId = {
+    menu: 'menuScreen',
+    deck: 'deckScreen',
+    game: 'gameScreen',
+    loss: 'lossScreen'
+  }[screen];
+
+  screenIds.forEach(id => {
+    $(id).hidden = id !== visibleId;
+  });
+
+  applyTheme();
+
+  const focusTarget = {
+    menu: state.active ? 'continueBtn' : 'startBtn',
+    game: 'nextRoundBtn',
+    loss: 'restartBtn'
+  }[screen];
+
+  if (screen === 'deck') {
+    document.querySelector('[data-deck]')?.focus();
+  } else if (screen === 'game' && $('nextRoundBtn').disabled) {
+    $('resetBtn').focus();
+  } else {
+    $(focusTarget)?.focus();
+  }
+
   window.scrollTo(0, 0);
 }
-function startGame() {
-  closeAllModals(); state = initialState(); render(); setScreen('game');
+
+function updateDeckSelection() {
+  document.querySelectorAll('[data-deck]').forEach(button => {
+    const active = button.dataset.deck === selectedDeck;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
+  });
+
+  $('beginBtn').disabled = !selectedDeck;
 }
+
+function openDeckSelection() {
+  selectedDeck = null;
+  updateDeckSelection();
+  setScreen('deck');
+}
+
+function startGame(deck) {
+  closeAllModals();
+
+  state = initialState(deck);
+  state.active = true;
+  selectedCardId = null;
+
+  render();
+  setScreen('game');
+}
+
+function advanceRound() {
+  if (roundBusy || state.round >= 3 || !state.active) return;
+
+  roundBusy = true;
+
+  state.round += 1;
+  state.cards = [];
+  state.rows = [{ horn: false }, { horn: false }, { horn: false }];
+  state.weather = [];
+  state.leaderRow = null;
+  state.selectedRow = 0;
+  state.nextId = 1;
+  state.nextGroup = 1;
+  selectedCardId = null;
+
+  // Salva a nova rodada antes da animação.
+  render();
+
+  $('transitionNumber').textContent = state.round;
+  $('roundTransition').hidden = false;
+  $('gameScreen').inert = true;
+
+  const reduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  setTimeout(() => {
+    $('roundTransition').hidden = true;
+    $('gameScreen').inert = false;
+    roundBusy = false;
+
+    render();
+
+    $('gameScreen').classList.add('round-arrival');
+    $('resetBtn').focus();
+
+    setTimeout(() => {
+      $('gameScreen').classList.remove('round-arrival');
+    }, 450);
+  }, reduced ? 150 : 1250);
+}
+
+function renderCoinText() {
+  $('coinResult').textContent = coinBusy
+    ? t('spinning')
+    : coinOutcome
+      ? t(coinOutcome)
+      : t('coinHint');
+
+  $('flipBtn').textContent = t(
+    coinBusy ? 'spinning' : coinOutcome ? 'flipAgain' : 'flip'
+  );
+
+  $('flipBtn').disabled = coinBusy;
+}
+
+function stopCoin() {
+  clearTimeout(coinTimer);
+  coinTimer = null;
+
+  if (!coinBusy) return;
+
+  coinBusy = false;
+  coinOutcome = null;
+  coinAngle = 0;
+
+  $('coinDisc').style.transition = 'none';
+  $('coinDisc').style.transform = 'rotateY(0deg)';
+
+  renderCoinText();
+}
+
 function applyLanguage() {
   document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en';
-  document.title = 'Gwent — ' + t('appTitle');
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll('[data-lang]').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === language);
-    b.setAttribute('aria-pressed', b.dataset.lang === language);
+  document.title = `Gwent — ${t('appTitle')}`;
+
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    element.textContent = t(element.dataset.i18n);
   });
-  document.getElementById('languageLabel').textContent = t('languageName');
-  document.querySelectorAll('[data-leader]').forEach(b => {
-    b.textContent = b.dataset.leader === 'none' ? t('noLeader') : `🎺 ${t('double')} ${t('rows')[Number(b.dataset.leader)]}`;
+
+  document.querySelectorAll('[data-lang]').forEach(button => {
+    const active = button.dataset.lang === language;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active);
   });
-  document.querySelectorAll('.close').forEach(b => b.setAttribute('aria-label', t('close')));
-  document.querySelectorAll('.modal').forEach(m => m.setAttribute('aria-label', m.querySelector('.modal-title').textContent));
-  document.querySelectorAll('.gem').forEach(b => b.setAttribute('aria-label', `${t('life')} ${Number(b.dataset.gem) + 1}`));
-  [['resetBtn', 'reset'], ['restartBtn', 'restart'], ['weatherBtn', 'weather'], ['leaderBtn', 'leader']].forEach(([id, key]) => {
-    const el = document.getElementById(id); el.setAttribute('aria-label', t(key)); el.title = t(key);
+
+  $('languageLabel').textContent = t('languageName');
+
+  document.querySelectorAll('[data-leader]').forEach(button => {
+    button.textContent = button.dataset.leader === 'none'
+      ? t('noLeader')
+      : `🎺 ${t('double')} ${t('rows')[Number(button.dataset.leader)]}`;
   });
-  render(); updateCardModal(); renderCoinText();
+
+  document.querySelectorAll('.close').forEach(button => {
+    button.setAttribute('aria-label', t('close'));
+  });
+
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    const title = modal.querySelector('.modal-title');
+    if (title?.textContent) {
+      modal.setAttribute('aria-label', title.textContent);
+    }
+  });
+
+  document.querySelectorAll('.gem').forEach(button => {
+    button.setAttribute(
+      'aria-label',
+      `${t('life')} ${Number(button.dataset.gem) + 1}`
+    );
+  });
+
+  [
+    ['resetBtn', 'reset'],
+    ['restartBtn', 'restart'],
+    ['nextRoundBtn', 'nextRound'],
+    ['weatherBtn', 'weather'],
+    ['leaderBtn', 'leader']
+  ].forEach(([id, key]) => {
+    $(id).setAttribute('aria-label', t(key));
+    $(id).title = t(key);
+  });
+
+  render();
+  updateCardModal();
+  renderCoinText();
 }
-document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
-  language = b.dataset.lang;
-  try { localStorage.setItem('gwent-language', language); } catch {}
-  applyLanguage();
-}));
-document.getElementById('startBtn').addEventListener('click', startGame);
-document.getElementById('exitBtn').addEventListener('click', () => setScreen('menu'));
-document.getElementById('restartBtn').addEventListener('click', startGame);
-document.getElementById('cancelFinish').addEventListener('click', closeAllModals);
-document.getElementById('confirmFinish').addEventListener('click', () => {
-  pendingGem = null; setScreen('loss');
+
+// Campo e cartas.
+board.addEventListener('click', event => {
+  if (roundBusy) return;
+
+  const button = event.target.closest('button');
+  if (!button) return;
+
+  if (button.hasAttribute('data-select-row')) {
+    state.selectedRow = Number(button.dataset.selectRow);
+    render();
+  }
+
+  if (button.hasAttribute('data-horn')) {
+    const row = Number(button.dataset.horn);
+    state.rows[row].horn = !state.rows[row].horn;
+    render();
+  }
+
+  if (button.hasAttribute('data-card')) {
+    openCardModal(Number(button.dataset.card));
+  }
 });
-document.getElementById('coinBtn').addEventListener('click', () => {
-  showModal('coinModal'); renderCoinText();
+
+document.querySelectorAll('[data-add]').forEach(button => {
+  button.addEventListener('click', () => {
+    if (roundBusy) return;
+
+    state.cards.push({
+      id: state.nextId++,
+      row: state.selectedRow,
+      value: Number(button.dataset.add),
+      effects: [],
+      groupId: null
+    });
+
+    render();
+  });
 });
-document.getElementById('flipBtn').addEventListener('click', () => {
+
+document.querySelectorAll('[data-effect]').forEach(button => {
+  button.addEventListener('click', () => {
+    const card = state.cards.find(item => item.id === selectedCardId);
+    if (!card) return;
+
+    setEffect(card, button.dataset.effect);
+    render();
+    updateCardModal();
+  });
+});
+
+$('bondPlus').addEventListener('click', () => {
+  const card = state.cards.find(item => item.id === selectedCardId);
+  if (!card) return;
+
+  addBondCopy(card);
+  closeAllModals();
+  render();
+});
+
+$('deleteCard').addEventListener('click', () => {
+  state.cards = state.cards.filter(card => card.id !== selectedCardId);
+  selectedCardId = null;
+
+  closeAllModals();
+  render();
+});
+
+// Clima e líder.
+document.querySelectorAll('[data-weather]').forEach(button => {
+  button.addEventListener('click', () => {
+    const weather = button.dataset.weather;
+
+    state.weather =
+      weather === 'none' || state.weather.includes(weather)
+        ? []
+        : [weather];
+
+    render();
+    closeAllModals();
+  });
+});
+
+document.querySelectorAll('[data-leader]').forEach(button => {
+  button.addEventListener('click', () => {
+    state.leaderRow = button.dataset.leader === 'none'
+      ? null
+      : Number(button.dataset.leader);
+
+    render();
+    closeAllModals();
+  });
+});
+
+$('weatherBtn').addEventListener('click', () => {
+  showModal('weatherModal');
+});
+
+$('leaderBtn').addEventListener('click', () => {
+  showModal('leaderModal');
+});
+
+// Pedras e derrota.
+document.querySelectorAll('.gem').forEach(button => {
+  button.addEventListener('click', () => {
+    if (roundBusy) return;
+
+    const index = Number(button.dataset.gem);
+    const removingLast =
+      state.gems[index] &&
+      state.gems.filter(Boolean).length === 1;
+
+    if (removingLast) {
+      showModal('finishModal');
+      pendingGem = index;
+    }
+
+    state.gems[index] = !state.gems[index];
+    render();
+  });
+});
+
+$('cancelFinish').addEventListener('click', closeAllModals);
+
+$('confirmFinish').addEventListener('click', () => {
+  pendingGem = null;
+  state.active = false;
+
+  render();
+  setScreen('loss');
+});
+
+// Menu, baralhos e continuidade.
+$('startBtn').addEventListener('click', openDeckSelection);
+
+$('continueBtn').addEventListener('click', () => {
+  if (!state.active) return;
+  render();
+  setScreen('game');
+});
+
+$('exitBtn').addEventListener('click', () => {
+  saveGame();
+  setScreen('menu');
+});
+
+$('backMenuBtn').addEventListener('click', () => {
+  setScreen('menu');
+});
+
+document.querySelectorAll('[data-deck]').forEach(button => {
+  button.addEventListener('click', () => {
+    selectedDeck = button.dataset.deck;
+    updateDeckSelection();
+  });
+});
+
+$('beginBtn').addEventListener('click', () => {
+  if (!DECKS.includes(selectedDeck)) return;
+
+  const deck = selectedDeck;
+
+  if (state.active) {
+    askConfirmation(
+      t('replaceQuestion'),
+      t('replaceNote'),
+      () => startGame(deck)
+    );
+  } else {
+    startGame(deck);
+  }
+});
+
+$('restartBtn').addEventListener('click', () => {
+  startGame(state.deck);
+});
+
+$('resetBtn').addEventListener('click', () => {
+  askConfirmation(
+    t('resetQuestion'),
+    t('resetNote'),
+    () => startGame(state.deck)
+  );
+});
+
+$('nextRoundBtn').addEventListener('click', () => {
+  if (roundBusy || state.round >= 3) return;
+
+  askConfirmation(
+    t('nextQuestion'),
+    t('nextNote'),
+    advanceRound
+  );
+});
+
+$('cancelAction').addEventListener('click', closeAllModals);
+
+$('confirmAction').addEventListener('click', () => {
+  const action = confirmationAction;
+  closeAllModals();
+  action?.();
+});
+
+// Idioma.
+document.querySelectorAll('[data-lang]').forEach(button => {
+  button.addEventListener('click', () => {
+    language = button.dataset.lang;
+
+    try {
+      localStorage.setItem(LANGUAGE_KEY, language);
+    } catch {
+      storageAvailable = false;
+    }
+
+    applyLanguage();
+  });
+});
+
+// Moeda.
+$('coinBtn').addEventListener('click', () => {
+  showModal('coinModal');
+  renderCoinText();
+});
+
+$('flipBtn').addEventListener('click', () => {
   if (coinBusy) return;
-  coinBusy = true; coinOutcome = null; renderCoinText();
+
+  coinBusy = true;
+  coinOutcome = null;
+  renderCoinText();
+
   const random = new Uint32Array(1);
   window.crypto.getRandomValues(random);
+
   const torch = random[0] % 2 === 1;
-  coinAngle = Math.ceil(coinAngle / 360) * 360 + 1800 + (torch ? 180 : 0);
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  coinAngle =
+    Math.ceil(coinAngle / 360) * 360 +
+    1800 +
+    (torch ? 180 : 0);
+
+  const reduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
   const duration = reduced ? 150 : 2200;
-  const disc = document.getElementById('coinDisc');
-  disc.style.transition = `transform ${duration}ms cubic-bezier(.18,.65,.28,1)`;
-  disc.style.transform = `rotateY(${coinAngle}deg)`;
+
+  $('coinDisc').style.transition =
+    `transform ${duration}ms cubic-bezier(.18,.65,.28,1)`;
+
+  $('coinDisc').style.transform = `rotateY(${coinAngle}deg)`;
+
   coinTimer = setTimeout(() => {
-    coinBusy = false; coinTimer = null; coinOutcome = torch ? 'torch' : 'castle'; renderCoinText();
+    coinBusy = false;
+    coinTimer = null;
+    coinOutcome = torch ? 'torch' : 'castle';
+    renderCoinText();
   }, duration);
 });
+
+// Fechamento dos boxes e navegação pelo teclado.
+document.querySelectorAll('.close').forEach(button => {
+  button.addEventListener('click', closeAllModals);
+});
+
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeAllModals();
+  });
+});
+
+document.addEventListener('keydown', event => {
+  if (roundBusy) return;
+
+  const modal = document.querySelector('.modal:not(.hidden)');
+  if (!modal) return;
+
+  if (event.key === 'Escape') {
+    closeAllModals();
+    return;
+  }
+
+  if (event.key !== 'Tab') return;
+
+  const buttons = [...modal.querySelectorAll('button')].filter(
+    button =>
+      !button.hidden &&
+      !button.disabled &&
+      button.getClientRects().length > 0
+  );
+
+  if (!buttons.length) return;
+
+  const first = buttons[0];
+  const last = buttons[buttons.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
+
+window.addEventListener('pagehide', saveGame);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveGame();
+});
+
+// Abre no menu, oferecendo continuar quando houver partida salva.
 applyLanguage();
+setScreen('menu');
