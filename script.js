@@ -5,6 +5,7 @@
 const translations = {
   pt: {
     appTitle: 'Assistente de Pontuação para o Boardgame',
+    menuEyebrow: 'ASSISTENTE PARA BOARDGAME',
     start: 'Começar novo jogo',
     continueGame: 'Continuar partida anterior',
     coin: 'Moeda',
@@ -68,9 +69,9 @@ const translations = {
     back: 'Voltar',
     bestas: 'Bestas',
     reinos_cima: 'Reinos de cima',
-    povos_floresta: 'Forest Peoples',
-    imperio_dourado: 'Golden Empire',
-    clas_ilhas: 'Island Clans',
+    povos_floresta: 'Povos da floresta',
+    imperio_dourado: 'Império Dourado',
+    clas_ilhas: 'Clãs das ilhas',
     round: 'Rodada',
     nextRound: 'Próxima rodada',
     nextQuestion: 'Avançar para a próxima rodada?',
@@ -93,6 +94,7 @@ const translations = {
 
   en: {
     appTitle: 'Boardgame Score Assistant',
+    menuEyebrow: 'BOARDGAME ASSISTANT',
     start: 'Start new game',
     continueGame: 'Continue previous game',
     coin: 'Coin toss',

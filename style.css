@@ -434,6 +434,8 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .menu-card { width: min(100%, 340px); text-align: center; }
 .menu-mark { color: var(--accent); font-size: 32px; margin-bottom: 18px; }
 .menu-card h1 { font-size: clamp(48px, 14vw, 76px); letter-spacing: .13em; margin: 12px 0 0; padding-left: .13em; }
+.brand-title { display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: .92; margin-bottom: 34px !important; padding-left: 0 !important; letter-spacing: .09em; }
+.brand-title span { display: block; }
 .menu-subtitle { color: var(--muted); margin: 8px 0 36px; font-size: 14px; }
 .menu-button { width: 100%; min-height: 52px; padding: 12px 18px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--line); font-weight: 700; }
 .menu-card > .menu-button + .menu-button { margin-top: 12px; }
