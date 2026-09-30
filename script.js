@@ -1,11 +1,52 @@
 // Moral: +1 às OUTRAS unidades do campo, conforme a regra solicitada.
 // Ordem: clima → laço do grupo → moral → corneta/líder. Heróis são imunes.
-const rowNames = ['Corpo a Corpo', 'À Distância', 'Cerco'];
+const translations = {
+  pt: {
+    appTitle: 'Assistente de pontuação', start: 'Começar jogo', coin: 'Moeda', score: 'PONTUAÇÃO',
+    addTitle: 'ADICIONAR CARTA', hint: 'Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.',
+    exit: 'sair', bond: 'Laço forte', bondPlus: 'Laço forte +1', morale: 'Moral', hero: 'Herói',
+    effects: 'Efeitos da carta', delete: 'Excluir carta', weather: 'Clima', none: 'Dia limpo',
+    frost: 'Geada', fog: 'Névoa', rain: 'Chuva', storm: 'Tempestade', leader: 'Líder', leaderTitle: 'Efeito do líder',
+    weatherNote: 'Apenas um clima por vez. Dia limpo remove o clima e restaura as cores.',
+    leaderNote: 'Escolha a fileira que recebe ×2 do líder. Não acumula com a corneta e não afeta heróis. “Nenhum” remove o efeito.',
+    noLeader: 'Nenhum', double: 'Dobrar', rows: ['Corpo a Corpo', 'À Distância', 'Cerco'],
+    group: 'Grupo', card: 'carta', cards: 'cartas', empty: 'Nenhuma carta', base: 'base', horn: 'Corneta',
+    currentScore: 'Pontuação atual', bondNote: '“Laço forte +1” adiciona uma cópia abaixo desta carta, no mesmo grupo.',
+    effectNote: 'Ative Laço forte para criar um grupo. Moral dá +1 às outras cartas do campo, exceto heróis.',
+    resetQuestion: 'Reiniciar a partida? Todas as cartas e efeitos serão removidos.', reset: 'Reiniciar partida',
+    gameOver: 'FIM DE JOGO', lost: 'PERDEU', restart: 'Recomeçar', finishQuestion: 'Finalizar jogo?',
+    finishNote: 'Você ficou sem pedras de vida.', yes: 'Sim', no: 'Não', close: 'Fechar', life: 'Pedra de vida',
+    castle: 'Castelo', torch: 'Tocha', flip: 'Girar moeda', spinning: 'Girando…', flipAgain: 'Girar novamente',
+    coinHint: 'Castelo ou tocha? Gire a moeda.', languageName: 'Português'
+  },
+  en: {
+    appTitle: 'Score assistant', start: 'Start game', coin: 'Coin toss', score: 'SCORE',
+    addTitle: 'ADD CARD', hint: 'Choose a row and tap a value. Tap a card to configure its effects.',
+    exit: 'exit', bond: 'Tight Bond', bondPlus: 'Tight Bond +1', morale: 'Morale', hero: 'Hero',
+    effects: 'Card effects', delete: 'Delete card', weather: 'Weather', none: 'Clear Weather',
+    frost: 'Frost', fog: 'Fog', rain: 'Rain', storm: 'Storm', leader: 'Leader', leaderTitle: 'Leader effect',
+    weatherNote: 'Only one weather card at a time. Clear Weather removes weather and restores row colors.',
+    leaderNote: 'Choose the row that gets ×2 from the leader. Does not stack with a horn or affect heroes. “None” removes the effect.',
+    noLeader: 'None', double: 'Double', rows: ['Close Combat', 'Ranged', 'Siege'],
+    group: 'Group', card: 'card', cards: 'cards', empty: 'No cards', base: 'base', horn: 'Horn',
+    currentScore: 'Current score', bondNote: '“Tight Bond +1” adds a copy below this card in the same group.',
+    effectNote: 'Enable Tight Bond to create a group. Morale gives +1 to the other cards on the board, except heroes.',
+    resetQuestion: 'Restart the game? All cards and effects will be removed.', reset: 'Restart game',
+    gameOver: 'GAME OVER', lost: 'YOU LOST', restart: 'Play again', finishQuestion: 'End game?',
+    finishNote: 'You have no life gems left.', yes: 'Yes', no: 'No', close: 'Close', life: 'Life gem',
+    castle: 'Castle', torch: 'Torch', flip: 'Flip coin', spinning: 'Spinning…', flipAgain: 'Flip again',
+    coinHint: 'Castle or torch? Flip the coin.', languageName: 'English'
+  }
+};
+let language = 'pt';
+try { const saved = localStorage.getItem('gwent-language'); if (saved === 'en' || saved === 'pt') language = saved; } catch {}
+const t = key => translations[language][key];
+
 const climates = {
-  frost: { label: '❄️ Geada', rows: [0] },
-  fog: { label: '🌫️ Névoa', rows: [1] },
-  rain: { label: '🌧️ Chuva', rows: [2] },
-  storm: { label: '⛈️ Tempestade', rows: [0, 1] }
+  frost: { icon: '❄️', rows: [0] },
+  fog: { icon: '🌫️', rows: [1] },
+  rain: { icon: '🌧️', rows: [2] },
+  storm: { icon: '⛈️', rows: [0, 1] }
 };
 function initialState() {
   return { selectedRow: 0, nextId: 1, nextGroup: 1, cards: [],
@@ -50,14 +91,14 @@ function addBondCopy(card) {
   return copy;
 }
 function cardMarkup(card) {
-  return `<button class="card ${has(card, 'hero') ? 'hero-card' : ''}" data-card="${card.id}" aria-label="Carta ${card.value}, pontuação ${cardScore(card)}. Editar efeitos">
-    <span class="card-numbers"><span class="card-value">${cardScore(card)}</span><small>base ${card.value}</small></span>
-    <span class="card-icons">${has(card, 'bond') ? '🔒' : ''}${has(card, 'morale') ? '❤️' : ''}${has(card, 'hero') ? '👑' : ''}</span>
+  return `<button class="card ${has(card, 'hero') ? 'hero-card' : ''}" data-card="${card.id}" aria-label="${t('card')} ${card.value}, ${t('currentScore')} ${cardScore(card)}. ${t('effects')}">
+    <span class="card-numbers"><span class="card-value">${cardScore(card)}</span><small>${t('base')} ${card.value}</small></span>
+    <span class="card-icons">${has(card, 'bond') ? '🔗 +'  : ''}${has(card, 'morale') ? '❤️' : ''}${has(card, 'hero') ? '👑' : ''}</span>
   </button>`;
 }
 function render() {
   board.innerHTML = '';
-  rowNames.forEach((name, rowIndex) => {
+  t('rows').forEach((name, rowIndex) => {
     const row = document.createElement('section');
     const weather = weatherFor(rowIndex);
     row.className = `row ${weather.length ? 'weather-affected weather-' + weather[weather.length - 1] : ''} ${state.selectedRow === rowIndex ? 'selected-row' : ''}`;
@@ -67,16 +108,16 @@ function render() {
       if (!has(card, 'bond')) return cardMarkup(card);
       if (seen.has(card.groupId)) return '';
       seen.add(card.groupId);
-      return `<div class="bond-group"><span class="group-label">🔒 Grupo ${card.groupId}</span>${cards.filter(c => c.groupId === card.groupId && has(c, 'bond')).map(cardMarkup).join('')}</div>`;
+      return `<div class="bond-group"><span class="group-label">🔗 + ${t('group')}</span>${cards.filter(c => c.groupId === card.groupId && has(c, 'bond')).map(cardMarkup).join('')}</div>`;
     }).join('');
     row.innerHTML = `<div class="row-head"><div class="row-name">${name}</div>
       <div class="row-score">${calculateRow(rowIndex)}</div>
-      <div class="row-controls"><button class="row-control ${state.selectedRow === rowIndex ? 'active' : ''}" data-select-row="${rowIndex}" aria-pressed="${state.selectedRow === rowIndex}">+ carta</button>
-      <button class="row-control ${state.rows[rowIndex].horn ? 'active' : ''}" data-horn="${rowIndex}" aria-pressed="${state.rows[rowIndex].horn}" aria-label="Corneta em ${name}">🎺 ×2</button></div>
-      ${weather.length ? `<div class="row-status">${weather.map(w => climates[w].label).join(' · ')}</div>` : ''}
-      ${state.leaderRow === rowIndex ? '<div class="leader-status">👑 Líder ×2</div>' : ''}</div>
-      <div class="cards">${markup || '<div class="empty">Nenhuma carta</div>'}</div>
-      <div class="row-total">${cards.length} carta${cards.length === 1 ? '' : 's'}</div>`;
+      <div class="row-controls"><button class="row-control ${state.selectedRow === rowIndex ? 'active' : ''}" data-select-row="${rowIndex}" aria-pressed="${state.selectedRow === rowIndex}">+ ${t('card')}</button>
+      <button class="row-control ${state.rows[rowIndex].horn ? 'active' : ''}" data-horn="${rowIndex}" aria-pressed="${state.rows[rowIndex].horn}" aria-label="${t('horn')} · ${name}">🎺 ×2</button></div>
+      ${weather.length ? `<div class="row-status">${weather.map(w => climates[w].icon + ' ' + t(w)).join(' · ')}</div>` : ''}
+      ${state.leaderRow === rowIndex ? `<div class="leader-status">👑 ${t('leader')} ×2</div>` : ''}</div>
+      <div class="cards">${markup || `<div class="empty">${t('empty')}</div>`}</div>
+      <div class="row-total">${cards.length} ${t(cards.length === 1 ? 'card' : 'cards')}</div>`;
     board.appendChild(row);
   });
   document.getElementById('totalScore').textContent = [0, 1, 2].reduce((sum, r) => sum + calculateRow(r), 0);
@@ -96,6 +137,7 @@ function render() {
   });
 }
 let lastFocus = null;
+let pendingGem = null;
 function showModal(id) {
   closeAllModals();
   lastFocus = document.activeElement;
@@ -104,6 +146,10 @@ function showModal(id) {
   modal.querySelector('button').focus();
 }
 function closeAllModals() {
+  if (pendingGem !== null) {
+    state.gems[pendingGem] = true; pendingGem = null; render();
+  }
+  stopCoin();
   document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
   if (lastFocus?.isConnected) lastFocus.focus();
 }
@@ -116,7 +162,7 @@ function updateCardModal() {
     b.setAttribute('aria-pressed', has(card, b.dataset.effect));
   });
   document.getElementById('bondPlus').hidden = !has(card, 'bond');
-  document.getElementById('cardNote').textContent = `Pontuação atual: ${cardScore(card)}. ` + (has(card, 'bond') ? `Grupo ${card.groupId}: “Laço forte +1” adiciona uma cópia abaixo desta carta, no mesmo grupo.` : 'Ative Laço forte para criar um grupo. Moral dá +1 às outras cartas do campo, exceto heróis.');
+  document.getElementById('cardNote').textContent = `${t('currentScore')}: ${cardScore(card)}. ` + t(has(card, 'bond') ? 'bondNote' : 'effectNote');
 }
 function openCardModal(id) {
   state.selectedCardId = id;
@@ -148,7 +194,7 @@ document.getElementById('deleteCard').addEventListener('click', () => {
 });
 document.querySelectorAll('[data-weather]').forEach(b => b.addEventListener('click', () => {
   const w = b.dataset.weather;
-  state.weather = w === 'none' ? [] : state.weather.includes(w) ? state.weather.filter(x => x !== w) : [...state.weather, w];
+  state.weather = w === 'none' || state.weather.includes(w) ? [] : [w];
   render(); closeAllModals();
 }));
 document.querySelectorAll('[data-leader]').forEach(b => b.addEventListener('click', () => {
@@ -156,7 +202,11 @@ document.querySelectorAll('[data-leader]').forEach(b => b.addEventListener('clic
   render(); closeAllModals();
 }));
 document.querySelectorAll('.gem').forEach(b => b.addEventListener('click', () => {
-  const i = Number(b.dataset.gem); state.gems[i] = !state.gems[i]; render();
+  const i = Number(b.dataset.gem);
+  state.gems[i] = !state.gems[i]; render();
+  if (state.gems.every(g => !g)) {
+    showModal('finishModal'); pendingGem = i;
+  }
 }));
 document.getElementById('weatherBtn').addEventListener('click', () => showModal('weatherModal'));
 document.getElementById('leaderBtn').addEventListener('click', () => showModal('leaderModal'));
@@ -178,7 +228,89 @@ document.addEventListener('keydown', e => {
   }
 });
 document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm('Reiniciar a partida? Todas as cartas e efeitos serão removidos.')) return;
+  if (!confirm(t('resetQuestion'))) return;
   state = initialState(); closeAllModals(); render();
 });
-render();
+
+let coinTimer = null;
+let coinBusy = false;
+let coinAngle = 0;
+let coinOutcome = null;
+function renderCoinText() {
+  document.getElementById('coinResult').textContent = coinBusy ? t('spinning') : coinOutcome ? t(coinOutcome) : t('coinHint');
+  document.getElementById('flipBtn').textContent = t(coinBusy ? 'spinning' : coinOutcome ? 'flipAgain' : 'flip');
+  document.getElementById('flipBtn').disabled = coinBusy;
+}
+function stopCoin() {
+  clearTimeout(coinTimer); coinTimer = null;
+  if (coinBusy) {
+    coinBusy = false; coinOutcome = null; coinAngle = 0;
+    const disc = document.getElementById('coinDisc');
+    disc.style.transition = 'none'; disc.style.transform = 'rotateY(0deg)';
+    renderCoinText();
+  }
+}
+function setScreen(screen) {
+  closeAllModals();
+  document.getElementById('menuScreen').hidden = screen !== 'menu';
+  document.getElementById('gameScreen').hidden = screen !== 'game';
+  document.getElementById('lossScreen').hidden = screen !== 'loss';
+  const focusId = screen === 'menu' ? 'startBtn' : screen === 'loss' ? 'restartBtn' : 'resetBtn';
+  document.getElementById(focusId).focus();
+  window.scrollTo(0, 0);
+}
+function startGame() {
+  closeAllModals(); state = initialState(); render(); setScreen('game');
+}
+function applyLanguage() {
+  document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en';
+  document.title = 'Gwent — ' + t('appTitle');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-lang]').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === language);
+    b.setAttribute('aria-pressed', b.dataset.lang === language);
+  });
+  document.getElementById('languageLabel').textContent = t('languageName');
+  document.querySelectorAll('[data-leader]').forEach(b => {
+    b.textContent = b.dataset.leader === 'none' ? t('noLeader') : `🎺 ${t('double')} ${t('rows')[Number(b.dataset.leader)]}`;
+  });
+  document.querySelectorAll('.close').forEach(b => b.setAttribute('aria-label', t('close')));
+  document.querySelectorAll('.modal').forEach(m => m.setAttribute('aria-label', m.querySelector('.modal-title').textContent));
+  document.querySelectorAll('.gem').forEach(b => b.setAttribute('aria-label', `${t('life')} ${Number(b.dataset.gem) + 1}`));
+  [['resetBtn', 'reset'], ['restartBtn', 'restart'], ['weatherBtn', 'weather'], ['leaderBtn', 'leader']].forEach(([id, key]) => {
+    const el = document.getElementById(id); el.setAttribute('aria-label', t(key)); el.title = t(key);
+  });
+  render(); updateCardModal(); renderCoinText();
+}
+document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => {
+  language = b.dataset.lang;
+  try { localStorage.setItem('gwent-language', language); } catch {}
+  applyLanguage();
+}));
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('exitBtn').addEventListener('click', () => setScreen('menu'));
+document.getElementById('restartBtn').addEventListener('click', startGame);
+document.getElementById('cancelFinish').addEventListener('click', closeAllModals);
+document.getElementById('confirmFinish').addEventListener('click', () => {
+  pendingGem = null; setScreen('loss');
+});
+document.getElementById('coinBtn').addEventListener('click', () => {
+  showModal('coinModal'); renderCoinText();
+});
+document.getElementById('flipBtn').addEventListener('click', () => {
+  if (coinBusy) return;
+  coinBusy = true; coinOutcome = null; renderCoinText();
+  const random = new Uint32Array(1);
+  window.crypto.getRandomValues(random);
+  const torch = random[0] % 2 === 1;
+  coinAngle = Math.ceil(coinAngle / 360) * 360 + 1800 + (torch ? 180 : 0);
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const duration = reduced ? 150 : 2200;
+  const disc = document.getElementById('coinDisc');
+  disc.style.transition = `transform ${duration}ms cubic-bezier(.18,.65,.28,1)`;
+  disc.style.transform = `rotateY(${coinAngle}deg)`;
+  coinTimer = setTimeout(() => {
+    coinBusy = false; coinTimer = null; coinOutcome = torch ? 'torch' : 'castle'; renderCoinText();
+  }, duration);
+});
+applyLanguage();

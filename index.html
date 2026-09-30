@@ -7,18 +7,37 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
+  <section class="menu-screen" id="menuScreen" aria-labelledby="menuTitle">
+    <div class="menu-card">
+      <div class="menu-mark" aria-hidden="true">◆</div>
+      <div class="eyebrow">THE WITCHER · BOARD GAME</div>
+      <h1 id="menuTitle">GWENT</h1>
+      <p class="menu-subtitle" data-i18n="appTitle">Assistente de pontuação</p>
+      <button class="menu-button primary" id="startBtn" data-i18n="start">Começar jogo</button>
+      <button class="menu-button" id="coinBtn" data-i18n="coin">Moeda</button>
+      <div class="language-buttons" role="group" aria-label="Idioma / Language">
+        <button class="language-button active" data-lang="pt" aria-label="Português do Brasil" aria-pressed="true" title="Português do Brasil">
+          <svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#168342"/><path d="M30 9 57 30 30 51 3 30Z" fill="#ffdc43"/><circle cx="30" cy="30" r="13" fill="#244492"/><path d="M18 26q13-3 24 8" fill="none" stroke="#fff" stroke-width="3"/></svg>
+        </button>
+        <button class="language-button" data-lang="en" aria-label="English (United States)" aria-pressed="false" title="English (United States)">
+          <svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#fff"/><path d="M0 5h60M0 15h60M0 25h60M0 35h60M0 45h60M0 55h60" stroke="#c9404c" stroke-width="5"/><path d="M0 0h32v32H0Z" fill="#284878"/><path d="M8 7h2m8 0h2m8 0h2M8 15h2m8 0h2m8 0h2M8 23h2m8 0h2m8 0h2" stroke="#fff" stroke-width="3"/></svg>
+        </button>
+      </div>
+      <p class="language-label" id="languageLabel">Português</p>
+    </div>
+  </section>
+  <main class="app" id="gameScreen" hidden>
     <header class="topbar">
       <div>
         <div class="eyebrow">GWENT</div>
-        <h1>Assistente de pontuação</h1>
+        <h1 data-i18n="appTitle">Assistente de pontuação</h1>
       </div>
       <button class="reset-btn" id="resetBtn" aria-label="Reiniciar partida">↻</button>
     </header>
 
     <section class="score-panel">
       <div class="score">
-        <span class="label">PONTUAÇÃO</span>
+        <span class="label" data-i18n="score">PONTUAÇÃO</span>
         <strong id="totalScore" aria-live="polite">0</strong>
       </div>
 
@@ -36,7 +55,7 @@
     <section class="board" id="board"></section>
 
     <section class="add-area">
-      <div class="section-title">ADICIONAR CARTA</div>
+      <div class="section-title" data-i18n="addTitle">ADICIONAR CARTA</div>
       <div class="number-pad">
         <button data-add="1">1</button>
         <button data-add="2">2</button>
@@ -54,39 +73,40 @@
         <button data-add="14">14</button>
         <button data-add="15">15</button>
       </div>
-      <p class="hint">Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.</p>
+      <p class="hint" data-i18n="hint">Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.</p>
     </section>
+    <button class="exit-button" id="exitBtn" data-i18n="exit">sair</button>
   </main>
 
   <div class="modal hidden" id="cardModal">
     <div class="modal-card">
       <button class="close" id="closeModal">×</button>
       <div class="modal-number" id="modalNumber">6</div>
-      <div class="modal-title">Efeitos da carta</div>
+      <div class="modal-title" data-i18n="effects">Efeitos da carta</div>
 
       <div class="effect-grid">
-        <button class="effect-btn" data-effect="bond">🔗<span>Laço Forte</span></button>
-        <button class="effect-btn" id="bondPlus" hidden>🔒<span>Laço forte +1</span></button>
-        <button class="effect-btn" data-effect="morale">❤️<span>Moral</span></button>
-        <button class="effect-btn" data-effect="hero">👑<span>Herói</span></button>
+        <button class="effect-btn" data-effect="bond">🔗<span data-i18n="bond">Laço Forte</span></button>
+        <button class="effect-btn" id="bondPlus" hidden>🔗 +<span data-i18n="bondPlus">Laço forte +1</span></button>
+        <button class="effect-btn" data-effect="morale">❤️<span data-i18n="morale">Moral</span></button>
+        <button class="effect-btn" data-effect="hero">👑<span data-i18n="hero">Herói</span></button>
       </div>
 
       <p class="modal-note" id="cardNote"></p>
-      <button class="delete-btn" id="deleteCard">Excluir carta</button>
+      <button class="delete-btn" id="deleteCard" data-i18n="delete">Excluir carta</button>
     </div>
   </div>
 
   <div class="modal hidden" id="weatherModal">
     <div class="modal-card">
       <button class="close" id="closeWeather">×</button>
-      <div class="modal-title">Clima</div>
-      <p class="modal-note">Toque para ativar ou remover um clima. Dia limpo remove todos os climas.</p>
+      <div class="modal-title" data-i18n="weather">Clima</div>
+      <p class="modal-note" data-i18n="weatherNote">Apenas um clima por vez. Dia limpo remove o clima e restaura as cores.</p>
       <div class="weather-grid">
-        <button data-weather="none">☀️<span>Dia limpo</span></button>
-        <button data-weather="frost">❄️<span>Geada</span></button>
-        <button data-weather="fog">🌫️<span>Névoa</span></button>
-        <button data-weather="rain">🌧️<span>Chuva</span></button>
-        <button data-weather="storm">⛈️<span>Tempestade</span></button>
+        <button data-weather="none">☀️<span data-i18n="none">Dia limpo</span></button>
+        <button data-weather="frost">❄️<span data-i18n="frost">Geada</span></button>
+        <button data-weather="fog">🌫️<span data-i18n="fog">Névoa</span></button>
+        <button data-weather="rain">🌧️<span data-i18n="rain">Chuva</span></button>
+        <button data-weather="storm">⛈️<span data-i18n="storm">Tempestade</span></button>
       </div>
     </div>
   </div>
@@ -94,17 +114,48 @@
   <div class="modal hidden" id="leaderModal">
     <div class="modal-card">
       <button class="close" id="closeLeader">×</button>
-      <div class="modal-title">Efeito do líder</div>
+      <div class="modal-title" data-i18n="leaderTitle">Efeito do líder</div>
       <div class="leader-options">
         <button data-leader="none">Nenhum</button>
         <button data-leader="0">🎺 Dobrar Corpo a Corpo</button>
         <button data-leader="1">🎺 Dobrar À Distância</button>
         <button data-leader="2">🎺 Dobrar Cerco</button>
       </div>
-      <p class="modal-note">Escolha a fileira que recebe ×2 do líder. Não acumula com a corneta e não afeta heróis. “Nenhum” remove o efeito.</p>
+      <p class="modal-note" data-i18n="leaderNote">Escolha a fileira que recebe ×2 do líder. Não acumula com a corneta e não afeta heróis. “Nenhum” remove o efeito.</p>
     </div>
   </div>
 
+  <section class="loss-screen" id="lossScreen" hidden aria-labelledby="lossTitle">
+    <div class="loss-content"><div class="eyebrow" data-i18n="gameOver">FIM DE JOGO</div>
+      <h1 id="lossTitle" data-i18n="lost">PERDEU</h1>
+      <button id="restartBtn" class="restart-button" aria-label="Recomeçar">↻</button>
+      <p data-i18n="restart">Recomeçar</p>
+    </div>
+  </section>
+  <div class="modal hidden centered-modal" id="finishModal">
+    <div class="modal-card">
+      <div class="modal-title" data-i18n="finishQuestion">Finalizar jogo?</div>
+      <p class="modal-note" data-i18n="finishNote">Você ficou sem pedras de vida.</p>
+      <div class="confirm-actions">
+        <button class="menu-button" id="cancelFinish" data-i18n="no">Não</button>
+        <button class="menu-button primary" id="confirmFinish" data-i18n="yes">Sim</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal hidden centered-modal" id="coinModal">
+    <div class="modal-card coin-panel">
+      <button class="close" id="closeCoin">×</button>
+      <div class="modal-title" data-i18n="coin">Moeda</div>
+      <div class="coin-stage" aria-hidden="true">
+        <div class="coin" id="coinDisc">
+          <div class="coin-face coin-front"><svg viewBox="0 0 100 100"><path d="M18 82V27h12v10h10V27h20v10h10V27h12v55ZM40 82V60a10 10 0 0 1 20 0v22" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><path d="M29 48v10m42-10v10" stroke="currentColor" stroke-width="6"/></svg><span data-i18n="castle">Castelo</span></div>
+          <div class="coin-face coin-back"><svg viewBox="0 0 100 100"><path d="M41 52h18l-5 37h-8Z" fill="currentColor"/><path d="M35 49h30v9H35Z" fill="currentColor"/><path d="M50 9c8 15 19 17 16 30-2 8-8 11-16 11-12 0-21-12-13-25 0 9 7 9 7 2 0-6 5-10 6-18Z" fill="#e68132"/><path d="M51 27c0 9 11 12 5 20-8 9-18-1-11-9 0 6 7 4 6-11Z" fill="#ffe396"/></svg><span data-i18n="torch">Tocha</span></div>
+        </div>
+      </div>
+      <p class="coin-result" id="coinResult" role="status" aria-live="polite"></p>
+      <button class="menu-button primary" id="flipBtn" data-i18n="flip">Girar moeda</button>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
