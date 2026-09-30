@@ -13,13 +13,13 @@
         <div class="eyebrow">GWENT</div>
         <h1>Assistente de pontuação</h1>
       </div>
-      <button class="reset-btn" id="resetBtn">↻</button>
+      <button class="reset-btn" id="resetBtn" aria-label="Reiniciar partida">↻</button>
     </header>
 
     <section class="score-panel">
       <div class="score">
         <span class="label">PONTUAÇÃO</span>
-        <strong id="totalScore">0</strong>
+        <strong id="totalScore" aria-live="polite">0</strong>
       </div>
 
       <div class="round-info">
@@ -54,7 +54,7 @@
         <button data-add="14">14</button>
         <button data-add="15">15</button>
       </div>
-      <p class="hint">Escolha a fileira e depois toque em um valor para adicionar a carta.</p>
+      <p class="hint">Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.</p>
     </section>
   </main>
 
@@ -66,10 +66,12 @@
 
       <div class="effect-grid">
         <button class="effect-btn" data-effect="bond">🔗<span>Laço Forte</span></button>
+        <button class="effect-btn" id="bondPlus" hidden>🔒<span>Laço forte +1</span></button>
         <button class="effect-btn" data-effect="morale">❤️<span>Moral</span></button>
         <button class="effect-btn" data-effect="hero">👑<span>Herói</span></button>
       </div>
 
+      <p class="modal-note" id="cardNote"></p>
       <button class="delete-btn" id="deleteCard">Excluir carta</button>
     </div>
   </div>
@@ -78,8 +80,9 @@
     <div class="modal-card">
       <button class="close" id="closeWeather">×</button>
       <div class="modal-title">Clima</div>
+      <p class="modal-note">Toque para ativar ou remover um clima. Dia limpo remove todos os climas.</p>
       <div class="weather-grid">
-        <button data-weather="none">☀️<span>Sem clima</span></button>
+        <button data-weather="none">☀️<span>Dia limpo</span></button>
         <button data-weather="frost">❄️<span>Geada</span></button>
         <button data-weather="fog">🌫️<span>Névoa</span></button>
         <button data-weather="rain">🌧️<span>Chuva</span></button>
@@ -94,9 +97,11 @@
       <div class="modal-title">Efeito do líder</div>
       <div class="leader-options">
         <button data-leader="none">Nenhum</button>
-        <button data-leader="horn">🎺 Multiplicar fileira</button>
+        <button data-leader="0">🎺 Dobrar Corpo a Corpo</button>
+        <button data-leader="1">🎺 Dobrar À Distância</button>
+        <button data-leader="2">🎺 Dobrar Cerco</button>
       </div>
-      <p class="modal-note">Nesta primeira versão, o líder funciona como um modificador simples. Podemos adicionar os líderes específicos depois.</p>
+      <p class="modal-note">Escolha a fileira que recebe ×2 do líder. Não acumula com a corneta e não afeta heróis. “Nenhum” remove o efeito.</p>
     </div>
   </div>
 
