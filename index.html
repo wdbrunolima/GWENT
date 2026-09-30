@@ -13,8 +13,10 @@
       <div class="eyebrow">THE WITCHER · BOARD GAME</div>
       <h1 id="menuTitle">GWENT</h1>
       <p class="menu-subtitle" data-i18n="appTitle">Assistente de pontuação</p>
-      <button class="menu-button primary" id="startBtn" data-i18n="start">Começar jogo</button>
+
+      <button class="menu-button new-game-button" id="startBtn" data-i18n="start">Começar novo jogo</button>
       <button class="menu-button" id="coinBtn" data-i18n="coin">Moeda</button>
+
       <div class="language-buttons" role="group" aria-label="Idioma / Language">
         <button class="language-button active" data-lang="pt" aria-label="Português do Brasil" aria-pressed="true" title="Português do Brasil">
           <svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#168342"/><path d="M30 9 57 30 30 51 3 30Z" fill="#ffdc43"/><circle cx="30" cy="30" r="13" fill="#244492"/><path d="M18 26q13-3 24 8" fill="none" stroke="#fff" stroke-width="3"/></svg>
@@ -26,6 +28,7 @@
       <p class="language-label" id="languageLabel">Português</p>
     </div>
   </section>
+
   <main class="app" id="gameScreen" hidden>
     <header class="topbar">
       <div>
@@ -41,9 +44,9 @@
         <strong id="totalScore" aria-live="polite">0</strong>
       </div>
 
-      <div class="round-info">
-        <button class="gem active" data-gem="0">◆</button>
-        <button class="gem active" data-gem="1">◆</button>
+      <div class="round-info" aria-label="Pedras de vida">
+        <span class="gem active" data-gem="0" role="img">◆</span>
+        <span class="gem active" data-gem="1" role="img">◆</span>
       </div>
 
       <div class="specials">
@@ -57,24 +60,13 @@
     <section class="add-area">
       <div class="section-title" data-i18n="addTitle">ADICIONAR CARTA</div>
       <div class="number-pad">
-        <button data-add="1">1</button>
-        <button data-add="2">2</button>
-        <button data-add="3">3</button>
-        <button data-add="4">4</button>
-        <button data-add="5">5</button>
-        <button data-add="6">6</button>
-        <button data-add="7">7</button>
-        <button data-add="8">8</button>
-        <button data-add="9">9</button>
-        <button data-add="10">10</button>
-        <button data-add="11">11</button>
-        <button data-add="12">12</button>
-        <button data-add="13">13</button>
-        <button data-add="14">14</button>
-        <button data-add="15">15</button>
+        <button data-add="1">1</button><button data-add="2">2</button><button data-add="3">3</button><button data-add="4">4</button><button data-add="5">5</button>
+        <button data-add="6">6</button><button data-add="7">7</button><button data-add="8">8</button><button data-add="9">9</button><button data-add="10">10</button>
+        <button data-add="11">11</button><button data-add="12">12</button><button data-add="13">13</button><button data-add="14">14</button><button data-add="15">15</button>
       </div>
       <p class="hint" data-i18n="hint">Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.</p>
     </section>
+
     <button class="exit-button" id="exitBtn" data-i18n="exit">sair</button>
   </main>
 
@@ -83,14 +75,12 @@
       <button class="close" id="closeModal">×</button>
       <div class="modal-number" id="modalNumber">6</div>
       <div class="modal-title" data-i18n="effects">Efeitos da carta</div>
-
       <div class="effect-grid">
         <button class="effect-btn" data-effect="bond">🔗<span data-i18n="bond">Laço Forte</span></button>
         <button class="effect-btn" id="bondPlus" hidden>🔗 +<span data-i18n="bondPlus">Laço forte +1</span></button>
         <button class="effect-btn" data-effect="morale">❤️<span data-i18n="morale">Moral</span></button>
         <button class="effect-btn" data-effect="hero">👑<span data-i18n="hero">Herói</span></button>
       </div>
-
       <p class="modal-note" id="cardNote"></p>
       <button class="delete-btn" id="deleteCard" data-i18n="delete">Excluir carta</button>
     </div>
@@ -125,23 +115,37 @@
     </div>
   </div>
 
-  <section class="loss-screen" id="lossScreen" hidden aria-labelledby="lossTitle">
-    <div class="loss-content"><div class="eyebrow" data-i18n="gameOver">FIM DE JOGO</div>
-      <h1 id="lossTitle" data-i18n="lost">PERDEU</h1>
-      <button id="restartBtn" class="restart-button" aria-label="Recomeçar">↻</button>
-      <p data-i18n="restart">Recomeçar</p>
-    </div>
-  </section>
-  <div class="modal hidden centered-modal" id="finishModal">
-    <div class="modal-card">
-      <div class="modal-title" data-i18n="finishQuestion">Finalizar jogo?</div>
-      <p class="modal-note" data-i18n="finishNote">Você ficou sem pedras de vida.</p>
-      <div class="confirm-actions">
-        <button class="menu-button" id="cancelFinish" data-i18n="no">Não</button>
-        <button class="menu-button primary" id="confirmFinish" data-i18n="yes">Sim</button>
+  <div class="modal hidden centered-modal" id="roundResultModal">
+    <div class="modal-card round-result-panel">
+      <button class="close" id="closeRoundResult">×</button>
+      <div class="round-result-icon" aria-hidden="true">⚔</div>
+      <div class="modal-title round-result-title" data-i18n="roundResultQuestion">Você ganhou ou perdeu a rodada?</div>
+      <p class="modal-note" data-i18n="roundResultNote">O resultado define se você perde uma pedra de vida antes de avançar.</p>
+      <div class="round-result-actions">
+        <button class="menu-button round-win-button" id="roundWinBtn" data-i18n="roundWon">Ganhei</button>
+        <button class="menu-button round-loss-button" id="roundLossBtn" data-i18n="roundLost">Perdi</button>
       </div>
     </div>
   </div>
+
+  <section class="loss-screen" id="lossScreen" hidden aria-labelledby="lossTitle">
+    <div class="loss-content">
+      <div class="eyebrow" data-i18n="gameOver">FIM DE JOGO</div>
+      <h1 id="lossTitle" data-i18n="lost">PERDEU</h1>
+      <button id="restartBtn" class="restart-button" aria-label="Recomeçar">↻</button>
+      <p data-i18n="playAgain">Jogar novamente</p>
+    </div>
+  </section>
+
+  <section class="win-screen" id="winScreen" hidden aria-labelledby="winTitle">
+    <div class="win-content">
+      <div class="eyebrow" data-i18n="victoryEyebrow">FIM DE JOGO</div>
+      <h1 id="winTitle" data-i18n="victory">VENCEU</h1>
+      <button id="restartWinBtn" class="restart-button" aria-label="Jogar novamente">↻</button>
+      <p data-i18n="playAgain">Jogar novamente</p>
+    </div>
+  </section>
+
   <div class="modal hidden centered-modal" id="coinModal">
     <div class="modal-card coin-panel">
       <button class="close" id="closeCoin">×</button>
@@ -156,6 +160,7 @@
       <button class="menu-button primary" id="flipBtn" data-i18n="flip">Girar moeda</button>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

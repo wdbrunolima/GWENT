@@ -897,3 +897,174 @@ body[data-faction]:not([data-faction=""]) .loss-screen {
     transition: none;
   }
 }
+/* =========================================================
+   AJUSTES DE FLUXO — MENU, PEDRAS DE VIDA E FIM DE RODADA
+   ========================================================= */
+
+/* Os dois botões principais agora têm hierarquia visual diferente. */
+.new-game-button {
+  background: #23262d;
+  color: #f0d79d;
+  border-color: #5a513e;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.new-game-button:hover {
+  background: #2a2d34;
+  border-color: #8f7645;
+}
+
+#continueBtn {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.continue-game-button {
+  background: linear-gradient(135deg, #f0ce75 0%, #c89a3d 48%, #f1d17d 100%);
+  color: #17130b;
+  border: 1px solid #f0cf78;
+  box-shadow:
+    0 0 0 1px rgba(255, 223, 141, .12),
+    0 8px 26px rgba(177, 125, 37, .20);
+  text-shadow: 0 1px 0 rgba(255,255,255,.28);
+  animation: continue-glow 2.8s ease-in-out infinite;
+}
+
+.continue-game-button::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  bottom: -40%;
+  left: -42%;
+  width: 30%;
+  transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  animation: continue-shine 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.continue-game-button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+@keyframes continue-glow {
+  0%, 100% { box-shadow: 0 8px 24px rgba(177,125,37,.18); }
+  50% { box-shadow: 0 8px 32px rgba(226,179,79,.36); }
+}
+
+@keyframes continue-shine {
+  0%, 55% { left: -42%; opacity: 0; }
+  68% { opacity: .9; }
+  84%, 100% { left: 118%; opacity: 0; }
+}
+
+/* Pedras de vida: agora são somente mostradores, sem clique. */
+.gem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  pointer-events: none;
+  cursor: default;
+  transition: opacity .22s ease, filter .22s ease, transform .22s ease;
+}
+
+.gem.active {
+  opacity: 1;
+  filter: drop-shadow(0 0 5px rgba(216,181,106,.28));
+}
+
+.gem:not(.active) {
+  opacity: .20;
+  filter: grayscale(1) brightness(.55);
+}
+
+/* Modal de resultado da rodada. */
+.round-result-panel {
+  text-align: center;
+}
+
+.round-result-icon {
+  margin: 4px 0 12px;
+  color: var(--accent);
+  font-size: 34px;
+}
+
+.round-result-title {
+  padding-right: 32px;
+  color: var(--text);
+  font-size: 21px;
+  line-height: 1.3;
+}
+
+.round-result-panel .modal-note {
+  max-width: 340px;
+  margin: 0 auto;
+  font-size: 12px;
+}
+
+.round-result-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.round-win-button {
+  background: #2f3d2b;
+  border-color: #64765b;
+  color: #e4f1dc;
+}
+
+.round-loss-button {
+  background: #3b2527;
+  border-color: #744a4e;
+  color: #ffd4d1;
+}
+
+.round-win-button:hover { background: #394b34; }
+.round-loss-button:hover { background: #472b2e; }
+
+/* Tela de vitória segue a mesma linguagem visual da tela de derrota. */
+.win-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #29351d 0, #111216 70%);
+}
+
+.win-content h1 {
+  color: #e2c36f;
+  font-size: clamp(52px, 13vw, 116px);
+  letter-spacing: .06em;
+  margin: 20px 0 24px;
+}
+
+.win-content p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+body[data-faction]:not([data-faction=""]) .win-screen {
+  background:
+    radial-gradient(ellipse at center, rgba(216,181,106,.11), rgba(0,0,0,.48)),
+    var(--bg);
+}
+
+@media (max-width: 430px) {
+  .round-result-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .continue-game-button,
+  .continue-game-button::after {
+    animation: none;
+  }
+}

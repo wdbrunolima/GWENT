@@ -5,8 +5,8 @@
 const translations = {
   pt: {
     appTitle: 'Assistente de pontuação',
-    start: 'Começar jogo',
-    continueGame: 'Continuar jogo',
+    start: 'Começar novo jogo',
+    continueGame: 'Continuar partida anterior',
     coin: 'Moeda',
     score: 'PONTUAÇÃO',
     addTitle: 'ADICIONAR CARTA',
@@ -73,6 +73,14 @@ const translations = {
     nextRound: 'Próxima rodada',
     nextQuestion: 'Avançar para a próxima rodada?',
     nextNote: 'As cartas, o clima, a corneta e o efeito do líder serão limpos. As pedras restantes serão mantidas.',
+    roundResultQuestion: 'Você ganhou ou perdeu a rodada?',
+    roundResultNote: 'O resultado define se você perde uma pedra de vida antes de avançar.',
+    roundWon: 'Ganhei',
+    roundLost: 'Perdi',
+    victory: 'VENCEU',
+    victoryEyebrow: 'FIM DE JOGO',
+    playAgain: 'Jogar novamente',
+    finalRoundResult: 'Registrar resultado da rodada',
     roundReady: 'Prepare suas cartas',
     lastRound: 'Última rodada. Reinicie para começar outra partida.',
     replaceQuestion: 'Começar uma nova partida?',
@@ -83,8 +91,8 @@ const translations = {
 
   en: {
     appTitle: 'Score assistant',
-    start: 'Start game',
-    continueGame: 'Continue game',
+    start: 'Start new game',
+    continueGame: 'Continue previous game',
     coin: 'Coin toss',
     score: 'SCORE',
     addTitle: 'ADD CARD',
@@ -151,6 +159,14 @@ const translations = {
     nextRound: 'Next round',
     nextQuestion: 'Advance to the next round?',
     nextNote: 'Cards, weather, horns and the leader effect will be cleared. Your remaining life gems will be kept.',
+    roundResultQuestion: 'Did you win or lose the round?',
+    roundResultNote: 'The result determines whether you lose a life gem before advancing.',
+    roundWon: 'I won',
+    roundLost: 'I lost',
+    victory: 'YOU WON',
+    victoryEyebrow: 'GAME OVER',
+    playAgain: 'Play again',
+    finalRoundResult: 'Record round result',
     roundReady: 'Prepare your cards',
     lastRound: 'Final round. Restart to begin another game.',
     replaceQuestion: 'Start a new game?',
@@ -334,10 +350,13 @@ function readSavedGame() {
 
 let state = readSavedGame() || initialState();
 
+$('startBtn').classList.remove('primary');
+$('startBtn').classList.add('new-game-button');
+
 // Acrescenta os novos controles sem precisar alterar seu HTML.
 $('startBtn').insertAdjacentHTML('beforebegin', `
   <button
-    class="menu-button primary"
+    class="menu-button continue-game-button"
     id="continueBtn"
     data-i18n="continueGame"
     hidden
@@ -460,7 +479,8 @@ const screenIds = [
   'menuScreen',
   'deckScreen',
   'gameScreen',
-  'lossScreen'
+  'lossScreen',
+  'winScreen'
 ];
 
 const board = $('board');
@@ -719,18 +739,18 @@ function render() {
     button.setAttribute('aria-pressed', active);
   });
 
-  document.querySelectorAll('.gem').forEach(button => {
-    const active = state.gems[Number(button.dataset.gem)];
-    button.classList.toggle('active', active);
-    button.setAttribute('aria-pressed', active);
+  document.querySelectorAll('.gem').forEach(gem => {
+    const active = state.gems[Number(gem.dataset.gem)];
+    gem.classList.toggle('active', active);
+    gem.setAttribute('aria-label', `${t('life')} ${Number(gem.dataset.gem) + 1}: ${active ? '●' : '○'}`);
   });
 
   $('matchCaption').textContent =
     `${t(state.deck)} · ${t('round')} ${state.round}/3`;
 
-  $('nextRoundBtn').disabled = state.round >= 3 || roundBusy;
+  $('nextRoundBtn').disabled = roundBusy || !state.active;
   $('nextRoundBtn').title = t(
-    state.round >= 3 ? 'lastRound' : 'nextRound'
+    state.round >= 3 ? 'finalRoundResult' : 'nextRound'
   );
 
   $('continueBtn').hidden = !state.active;
@@ -740,7 +760,7 @@ function render() {
 
 function applyTheme() {
   document.body.dataset.faction =
-    currentScreen === 'game' || currentScreen === 'loss'
+    ['game', 'loss', 'win'].includes(currentScreen)
       ? state.deck
       : '';
 }
@@ -834,7 +854,8 @@ function setScreen(screen) {
     menu: 'menuScreen',
     deck: 'deckScreen',
     game: 'gameScreen',
-    loss: 'lossScreen'
+    loss: 'lossScreen',
+    win: 'winScreen'
   }[screen];
 
   screenIds.forEach(id => {
@@ -846,12 +867,13 @@ function setScreen(screen) {
   const focusTarget = {
     menu: state.active ? 'continueBtn' : 'startBtn',
     game: 'nextRoundBtn',
-    loss: 'restartBtn'
+    loss: 'restartBtn',
+    win: 'restartWinBtn'
   }[screen];
 
   if (screen === 'deck') {
     document.querySelector('[data-deck]')?.focus();
-  } else if (screen === 'game' && $('nextRoundBtn').disabled) {
+  } else if (screen === 'game' && roundBusy) {
     $('resetBtn').focus();
   } else {
     $(focusTarget)?.focus();
@@ -885,6 +907,51 @@ function startGame(deck) {
 
   render();
   setScreen('game');
+}
+
+function completedWins() {
+  const completedRounds = Math.max(0, state.round - 1);
+  const losses = 2 - state.gems.filter(Boolean).length;
+  return Math.max(0, completedRounds - losses);
+}
+
+function finishMatch(screen) {
+  state.active = false;
+  selectedCardId = null;
+  render();
+  setScreen(screen);
+}
+
+function registerRoundResult(won) {
+  if (roundBusy || !state.active) return;
+
+  const winsBefore = completedWins();
+
+  if (!won) {
+    const gemIndex = state.gems.findIndex(Boolean);
+    if (gemIndex !== -1) state.gems[gemIndex] = false;
+
+    if (!state.gems.some(Boolean)) {
+      closeAllModals();
+      finishMatch('loss');
+      return;
+    }
+  } else if (winsBefore + 1 >= 2) {
+    closeAllModals();
+    finishMatch('win');
+    return;
+  }
+
+  closeAllModals();
+
+  if (state.round >= 3) {
+    // Na terceira rodada, qualquer resultado que não seja a segunda derrota
+    // encerra a partida como vitória.
+    finishMatch('win');
+    return;
+  }
+
+  advanceRound();
 }
 
 function advanceRound() {
@@ -995,17 +1062,18 @@ function applyLanguage() {
     }
   });
 
-  document.querySelectorAll('.gem').forEach(button => {
-    button.setAttribute(
+  document.querySelectorAll('.gem').forEach(gem => {
+    gem.setAttribute(
       'aria-label',
-      `${t('life')} ${Number(button.dataset.gem) + 1}`
+      `${t('life')} ${Number(gem.dataset.gem) + 1}`
     );
   });
 
   [
     ['resetBtn', 'reset'],
-    ['restartBtn', 'restart'],
-    ['nextRoundBtn', 'nextRound'],
+    ['restartBtn', 'playAgain'],
+    ['restartWinBtn', 'playAgain'],
+    ['nextRoundBtn', state.round >= 3 ? 'finalRoundResult' : 'nextRound'],
     ['weatherBtn', 'weather'],
     ['leaderBtn', 'leader']
   ].forEach(([id, key]) => {
@@ -1119,35 +1187,8 @@ $('leaderBtn').addEventListener('click', () => {
   showModal('leaderModal');
 });
 
-// Pedras e derrota.
-document.querySelectorAll('.gem').forEach(button => {
-  button.addEventListener('click', () => {
-    if (roundBusy) return;
-
-    const index = Number(button.dataset.gem);
-    const removingLast =
-      state.gems[index] &&
-      state.gems.filter(Boolean).length === 1;
-
-    if (removingLast) {
-      showModal('finishModal');
-      pendingGem = index;
-    }
-
-    state.gems[index] = !state.gems[index];
-    render();
-  });
-});
-
-$('cancelFinish').addEventListener('click', closeAllModals);
-
-$('confirmFinish').addEventListener('click', () => {
-  pendingGem = null;
-  state.active = false;
-
-  render();
-  setScreen('loss');
-});
+// Pedras de vida são apenas indicadores visuais.
+// O resultado da rodada é informado pelo botão de avançar.
 
 // Menu, baralhos e continuidade.
 $('startBtn').addEventListener('click', openDeckSelection);
@@ -1190,9 +1231,8 @@ $('beginBtn').addEventListener('click', () => {
   }
 });
 
-$('restartBtn').addEventListener('click', () => {
-  startGame(state.deck);
-});
+$('restartBtn').addEventListener('click', openDeckSelection);
+$('restartWinBtn').addEventListener('click', openDeckSelection);
 
 $('resetBtn').addEventListener('click', () => {
   askConfirmation(
@@ -1203,13 +1243,16 @@ $('resetBtn').addEventListener('click', () => {
 });
 
 $('nextRoundBtn').addEventListener('click', () => {
-  if (roundBusy || state.round >= 3) return;
+  if (roundBusy || !state.active) return;
+  showModal('roundResultModal');
+});
 
-  askConfirmation(
-    t('nextQuestion'),
-    t('nextNote'),
-    advanceRound
-  );
+$('roundWinBtn').addEventListener('click', () => {
+  registerRoundResult(true);
+});
+
+$('roundLossBtn').addEventListener('click', () => {
+  registerRoundResult(false);
 });
 
 $('cancelAction').addEventListener('click', closeAllModals);
