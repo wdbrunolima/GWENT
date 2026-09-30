@@ -636,31 +636,31 @@ button:disabled {
     filter .18s;
 }
 
-.deck-button[data-deck="monsters"] {
+.deck-button[data-deck="bestas"] {
   --deck-bg: #531e2c;
   --deck-edge: #935062;
   --deck-dot: #e88b9f;
 }
 
-.deck-button[data-deck="northern"] {
+.deck-button[data-deck="reinos_cima"] {
   --deck-bg: #1b326c;
   --deck-edge: #4967ab;
   --deck-dot: #95b5ff;
 }
 
-.deck-button[data-deck="scoiatael"] {
+.deck-button[data-deck="povos_floresta"] {
   --deck-bg: #344326;
   --deck-edge: #657d4d;
   --deck-dot: #b4d68a;
 }
 
-.deck-button[data-deck="nilfgaard"] {
+.deck-button[data-deck="imperio_dourado"] {
   --deck-bg: #484020;
   --deck-edge: #8c7940;
   --deck-dot: #ecd278;
 }
 
-.deck-button[data-deck="skellige"] {
+.deck-button[data-deck="clas_ilhas"] {
   --deck-bg: #44315b;
   --deck-edge: #80639c;
   --deck-dot: #d0abf2;
@@ -700,23 +700,23 @@ button:disabled {
 /* ---------------------------------------------------------
    FUNDOS POR FACÇÃO
    --------------------------------------------------------- */
-body[data-faction="monsters"] {
+body[data-faction="bestas"] {
   --bg: #35131f;
 }
 
-body[data-faction="northern"] {
+body[data-faction="reinos_cima"] {
   --bg: #14264f;
 }
 
-body[data-faction="scoiatael"] {
+body[data-faction="povos_floresta"] {
   --bg: #26321f;
 }
 
-body[data-faction="nilfgaard"] {
+body[data-faction="imperio_dourado"] {
   --bg: #302b1b;
 }
 
-body[data-faction="skellige"] {
+body[data-faction="clas_ilhas"] {
   --bg: #30223f;
 }
 
@@ -1067,4 +1067,55 @@ body[data-faction]:not([data-faction=""]) .win-screen {
   .continue-game-button::after {
     animation: none;
   }
+}
+
+
+/* ---------------------------------------------------------
+   RODAPÉ / AÇÕES DE FIM DE JOGO
+   --------------------------------------------------------- */
+body {
+  padding-bottom: 72px;
+}
+
+.app-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  padding: 9px 18px max(9px, env(safe-area-inset-bottom));
+  background: rgba(10, 11, 14, .94);
+  border-top: 1px solid rgba(255,255,255,.08);
+  text-align: center;
+}
+
+.app-footer p {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  color: #7f838c;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.end-exit-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 9px 22px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid #4a4d55;
+  border-radius: 10px;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.end-exit-button:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+@media (max-width: 430px) {
+  body { padding-bottom: 92px; }
+  .app-footer { padding-left: 12px; padding-right: 12px; }
+  .app-footer p { font-size: 8px; }
 }

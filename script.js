@@ -4,7 +4,7 @@
 
 const translations = {
   pt: {
-    appTitle: 'Assistente de pontuação',
+    appTitle: 'Assistente de Pontuação para o Boardgame',
     start: 'Começar novo jogo',
     continueGame: 'Continuar partida anterior',
     coin: 'Moeda',
@@ -12,6 +12,8 @@ const translations = {
     addTitle: 'ADICIONAR CARTA',
     hint: 'Escolha a fileira e toque em um valor. Toque na carta para configurar seus efeitos.',
     exit: 'sair',
+    exitToMenu: 'Sair',
+    footerDisclaimer: 'GuentorScore é um aplicativo independente, desenvolvido por terceiros, sem vínculo, afiliação, patrocínio ou endosso de quaisquer empresas, marcas ou propriedades intelectuais de terceiros.',
     bond: 'Laço forte',
     bondPlus: 'Laço forte +1',
     morale: 'Moral',
@@ -61,14 +63,14 @@ const translations = {
     coinHint: 'Castelo ou tocha? Gire a moeda.',
     languageName: 'Português',
     chooseDeck: 'Escolha seu baralho',
-    deckHint: 'Selecione uma facção para começar.',
+    deckHint: 'Selecione um baralho para começar.',
     begin: 'Começar',
     back: 'Voltar',
-    monsters: 'Monstros',
-    northern: 'Reinos do Norte',
-    scoiatael: "Scoia’tael",
-    nilfgaard: 'Nilfgaard',
-    skellige: 'Skellige',
+    bestas: 'Bestas',
+    reinos_cima: 'Reinos de cima',
+    povos_floresta: 'Forest Peoples',
+    imperio_dourado: 'Golden Empire',
+    clas_ilhas: 'Island Clans',
     round: 'Rodada',
     nextRound: 'Próxima rodada',
     nextQuestion: 'Avançar para a próxima rodada?',
@@ -90,7 +92,7 @@ const translations = {
   },
 
   en: {
-    appTitle: 'Score assistant',
+    appTitle: 'Boardgame Score Assistant',
     start: 'Start new game',
     continueGame: 'Continue previous game',
     coin: 'Coin toss',
@@ -98,6 +100,8 @@ const translations = {
     addTitle: 'ADD CARD',
     hint: 'Choose a row and tap a value. Tap a card to configure its effects.',
     exit: 'exit',
+    exitToMenu: 'Exit',
+    footerDisclaimer: 'GuentorScore is an independent third-party application with no connection, affiliation, sponsorship or endorsement from any third-party companies, brands or intellectual properties.',
     bond: 'Tight Bond',
     bondPlus: 'Tight Bond +1',
     morale: 'Morale',
@@ -147,14 +151,14 @@ const translations = {
     coinHint: 'Castle or torch? Flip the coin.',
     languageName: 'English',
     chooseDeck: 'Choose your deck',
-    deckHint: 'Select a faction to begin.',
+    deckHint: 'Select a deck to begin.',
     begin: 'Begin',
     back: 'Back',
-    monsters: 'Monsters',
-    northern: 'Northern Realms',
-    scoiatael: "Scoia’tael",
-    nilfgaard: 'Nilfgaard',
-    skellige: 'Skellige',
+    bestas: 'Beasts',
+    reinos_cima: 'Upper Realms',
+    povos_floresta: 'Forest Peoples',
+    imperio_dourado: 'Golden Empire',
+    clas_ilhas: 'Island Clans',
     round: 'Round',
     nextRound: 'Next round',
     nextQuestion: 'Advance to the next round?',
@@ -177,11 +181,11 @@ const translations = {
 };
 
 const DECKS = [
-  'monsters',
-  'northern',
-  'scoiatael',
-  'nilfgaard',
-  'skellige'
+  'bestas',
+  'reinos_cima',
+  'povos_floresta',
+  'imperio_dourado',
+  'clas_ilhas'
 ];
 
 const climates = {
@@ -191,8 +195,8 @@ const climates = {
   storm: { icon: '⛈️', rows: [1, 2] }
 };
 
-const SAVE_KEY = 'gwent-game-v3';
-const LANGUAGE_KEY = 'gwent-language';
+const SAVE_KEY = 'guentorscore-game-v4';
+const LANGUAGE_KEY = 'guentorscore-language';
 
 const $ = id => document.getElementById(id);
 const has = (card, effect) => card.effects.includes(effect);
@@ -223,7 +227,7 @@ try {
 
 const t = key => translations[language][key];
 
-function initialState(deck = 'monsters') {
+function initialState(deck = 'bestas') {
   return {
     active: false,
     deck,
@@ -376,7 +380,7 @@ $('languageLabel').insertAdjacentHTML('afterend', `
 $('menuScreen').insertAdjacentHTML('afterend', `
   <section class="deck-screen" id="deckScreen" hidden>
     <div class="deck-panel">
-      <div class="eyebrow">GWENT</div>
+      <div class="eyebrow">GUENTORSCORE</div>
       <h1 data-i18n="chooseDeck"></h1>
       <p class="menu-subtitle" data-i18n="deckHint"></p>
 
@@ -1028,7 +1032,7 @@ function stopCoin() {
 
 function applyLanguage() {
   document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en';
-  document.title = `Gwent — ${t('appTitle')}`;
+  document.title = `GuentorScore — ${t('appTitle')}`;
 
   document.querySelectorAll('[data-i18n]').forEach(element => {
     element.textContent = t(element.dataset.i18n);
@@ -1233,6 +1237,8 @@ $('beginBtn').addEventListener('click', () => {
 
 $('restartBtn').addEventListener('click', openDeckSelection);
 $('restartWinBtn').addEventListener('click', openDeckSelection);
+$('exitLossBtn').addEventListener('click', () => setScreen('menu'));
+$('exitWinBtn').addEventListener('click', () => setScreen('menu'));
 
 $('resetBtn').addEventListener('click', () => {
   askConfirmation(
